@@ -133,7 +133,7 @@
 }
 
 /* ==========================================================================
-   Světlá varianta: bílý základ, hluboká modř a zelený akcent
+   Světlá varianta: bílý základ, hluboká modř a modrý akcent
    ========================================================================== */
 [data-theme='light'] {
   color-scheme: light;
@@ -147,10 +147,10 @@
   --color-border: rgba(17, 20, 59, 0.09);
   --color-border-strong: rgba(17, 20, 59, 0.18);
 
-  --color-accent: #78e79b;
-  --color-accent-hover: #5bd982;
+  --color-accent: #4169e1;
+  --color-accent-hover: #3456c0;
   --color-accent-ink: #5260ed;
-  --color-accent-text: #11143b;
+  --color-accent-text: #ffffff;
   --color-accent-soft: rgba(82, 96, 237, 0.08);
 
   --color-placeholder-bg: rgba(82, 96, 237, 0.06);
