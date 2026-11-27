@@ -16,10 +16,10 @@ const services = [
 ];
 
 const storage =
-  process.env.KEYSTATIC_STORAGE === 'github' || process.env.NODE_ENV === 'production'
+  import.meta.env.PROD || import.meta.env.PUBLIC_KEYSTATIC_STORAGE === 'github'
     ? {
         kind: 'github' as const,
-      repo: { owner: 'jakubminka', name: 'minkacreative' },
+        repo: { owner: 'jakubminka', name: 'minkacreative' },
       }
     : { kind: 'local' as const };
 

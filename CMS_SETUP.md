@@ -22,12 +22,27 @@ image processing to avoid a Cloudflare Images binding.
 
 ## GitHub sign-in
 
-Visit `/keystatic/` on the deployed site and follow Keystatic's GitHub App setup
-flow. The GitHub App must be installed with write access to `jakubminka/minkacreative`.
-Set the generated `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`,
-and `KEYSTATIC_SECRET` as encrypted Worker secrets. Set
-`PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` as a public build/runtime variable as requested
-by the setup flow. Never commit the secret values.
+Create the GitHub App from local development; Keystatic does not allow the initial
+App-creation flow on the production Worker. The local dev script uses Node.js for
+Keystatic API routes, while production builds continue to use Cloudflare Workers.
+From the project root, run:
+
+```sh
+PUBLIC_KEYSTATIC_STORAGE=github npm run dev -- --host 127.0.0.1 --port 4322
+```
+
+Open `http://127.0.0.1:4322/keystatic/`. If the GitHub setup prompt is not shown,
+open `http://127.0.0.1:4322/api/keystatic/github/login` directly. Follow the setup
+flow to create the app and install it with access to `jakubminka/minkacreative`.
+Keystatic writes the generated values to the local `.env` file, which is ignored by
+Git.
+
+In the Cloudflare dashboard, open **Workers & Pages → minka-creative → Settings →
+Variables and Secrets**. Add `KEYSTATIC_GITHUB_CLIENT_ID`,
+`KEYSTATIC_GITHUB_CLIENT_SECRET`, and `KEYSTATIC_SECRET` as secrets. Add
+`PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` as a regular variable. Never commit or share the
+secret values. After saving the Worker settings, open `/keystatic/` on the deployed
+site and sign in with GitHub.
 
 When GitHub storage is active, saving an entry writes it to the repository. The
 Cloudflare Git integration should then rebuild and deploy the site from the updated
