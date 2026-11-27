@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SectionHeader from '../../components/SectionHeader.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import ContactCtaBand from '../../components/ContactCtaBand.astro';
+import { getMediaLibrary, getMediaRecord, requireMediaImage } from '../../utils/media';
 
 const allProjects = await getCollection('projects');
 
@@ -12,6 +13,25 @@ const projects = allProjects.sort((a, b) => {
   if (a.data.featured && !b.data.featured) return -1;
   if (!a.data.featured && b.data.featured) return 1;
   return (a.data.order ?? 99) - (b.data.order ?? 99);
+});
+const mediaLibrary = await getMediaLibrary();
+const projectsWithImages = projects.map((entry) => {
+  const media = getMediaRecord(
+    mediaLibrary,
+    entry.data.coverMedia,
+    `project "${entry.id}" portfolio card`
+  );
+  const image = media
+    ? requireMediaImage(media, `project "${entry.id}" portfolio card`)
+    : entry.data.cover;
+  if (!image) {
+    throw new Error(`Project "${entry.id}" has no cover image.`);
+  }
+  return {
+    entry,
+    image,
+    imageAlt: media?.alt || entry.data.coverAlt || entry.data.title,
+  };
 });
 
 const categoryLabels: Record<string, string> = {
@@ -60,7 +80,7 @@ const categories = Object.keys(categoryLabels);
   <section class="section" style="padding-top: 0;">
     <div class="container">
       <div class="grid grid--2" id="portfolio-grid">
-        {projects.map((entry) => (
+        {projectsWithImages.map(({ entry, image, imageAlt }) => (
           <div
             class="portfolio-item"
             data-categories={entry.data.categories.join(',')}
@@ -68,8 +88,8 @@ const categories = Object.keys(categoryLabels);
             <ProjectCard
               title={entry.data.title}
               summary={entry.data.summary}
-              image={entry.data.cover}
-              imageAlt={entry.data.coverAlt}
+              image={image}
+              imageAlt={imageAlt}
               href={`/portfolio/${entry.id}/`}
               showClientName={entry.data.showClientName}
               relationship={entry.data.relationship}

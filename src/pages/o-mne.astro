@@ -5,12 +5,42 @@ import SectionHeader from '../components/SectionHeader.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
 import ContactCtaBand from '../components/ContactCtaBand.astro';
 import portraitImg from '../assets/placeholders/portrait-3x4.png';
+import { getPageCopy } from '../utils/pageCopy';
+import { getMediaLibrary, getMediaRecord, requireMediaImage } from '../utils/media';
+
+const pageCopy = await getPageCopy('o-mne');
+const mediaLibrary = await getMediaLibrary();
+const portraitMedia = getMediaRecord(
+  mediaLibrary,
+  pageCopy?.data.heroMedia,
+  'about page portrait'
+);
+const portrait = portraitMedia
+  ? requireMediaImage(portraitMedia, 'about page portrait')
+  : portraitImg;
+const portraitAlt = portraitMedia?.alt || '[DOPLNIT: Reálný portrét Jakuba Minky]';
 ---
 
 <BaseLayout
-  title="O mně | Jakub Minka | Minka Creative"
-  description="Jakub Minka — fotograf a tvůrce videí působící ve Vlašimi, Benešově, Praze a okolí."
+  title={pageCopy?.data.seoTitle || 'O mně | Jakub Minka | Minka Creative'}
+  description={pageCopy?.data.seoDescription || 'Jakub Minka — fotograf a tvůrce videí působící ve Vlašimi, Benešově, Praze a okolí.'}
+  image={portrait.src}
 >
+  {portraitMedia && (
+    <script
+      slot="head"
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ImageObject',
+        name: portraitMedia.seoTitle || 'Jakub Minka',
+        description: portraitMedia.seoDescription || portraitAlt,
+        caption: portraitAlt,
+        contentUrl: new URL(portrait.src, Astro.site).toString(),
+      })}
+    />
+  )}
   <section class="section">
     <div class="container about-grid">
       <div class="about-copy">
@@ -32,8 +62,8 @@ import portraitImg from '../assets/placeholders/portrait-3x4.png';
         </p>
       </div>
       <Picture
-        src={portraitImg}
-        alt="[DOPLNIT: Reálný portrét Jakuba Minky]"
+        src={portrait}
+        alt={portraitAlt}
         formats={['avif', 'webp']}
         widths={[480, 768]}
         sizes="(min-width: 64rem) 38vw, 94vw"

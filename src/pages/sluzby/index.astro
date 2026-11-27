@@ -6,6 +6,69 @@ import ContactCtaBand from '../../components/ContactCtaBand.astro';
 import landscapeImg from '../../assets/placeholders/landscape-4x3.png';
 import fullBleedImg from '../../assets/placeholders/fullbleed-21x9.png';
 import heroImg from '../../assets/placeholders/hero-16x9.png';
+import { getPageCopy } from '../../utils/pageCopy';
+import { getMediaLibrary, getMediaRecord, requireMediaImage } from '../../utils/media';
+
+const pageCopy = await getPageCopy('sluzby');
+const mediaLibrary = await getMediaLibrary();
+
+function resolveCardMedia(
+  mediaId: string | null | undefined,
+  fallback: typeof landscapeImg,
+  fallbackAlt: string,
+  context: string
+) {
+  const media = getMediaRecord(mediaLibrary, mediaId, context);
+  return {
+    image: media ? requireMediaImage(media, context) : fallback,
+    imageAlt: media?.alt || fallbackAlt,
+  };
+}
+
+const serviceImages = {
+  photo: resolveCardMedia(
+    pageCopy?.data.photoServiceMedia,
+    landscapeImg,
+    '[DOPLNIT: Reálná ukázka fotografické služby]',
+    'Služby page photo card'
+  ),
+  video: resolveCardMedia(
+    pageCopy?.data.videoServiceMedia,
+    heroImg,
+    '[DOPLNIT: Reálná ukázka video produkce]',
+    'Služby page video card'
+  ),
+  drone: resolveCardMedia(
+    pageCopy?.data.droneServiceMedia,
+    fullBleedImg,
+    '[DOPLNIT: Reálný letecký záběr]',
+    'Služby page drone card'
+  ),
+  company: resolveCardMedia(
+    pageCopy?.data.companyServiceMedia,
+    landscapeImg,
+    '[DOPLNIT: Reálná ukázka práce pro firmu]',
+    'Služby page company card'
+  ),
+  construction: resolveCardMedia(
+    pageCopy?.data.constructionServiceMedia,
+    fullBleedImg,
+    '[DOPLNIT: Reálný snímek z průběhu stavby]',
+    'Služby page construction card'
+  ),
+  architecture: resolveCardMedia(
+    pageCopy?.data.architectureServiceMedia,
+    heroImg,
+    '[DOPLNIT: Reálná ukázka interiéru]',
+    'Služby page architecture card'
+  ),
+  tourism: resolveCardMedia(
+    pageCopy?.data.tourismServiceMedia,
+    fullBleedImg,
+    '[DOPLNIT: Reálný pohled na město nebo obec]',
+    'Služby page tourism card'
+  ),
+};
 ---
 
 <BaseLayout
@@ -22,9 +85,9 @@ import heroImg from '../../assets/placeholders/hero-16x9.png';
         cmsEditable={true}
       />
       <div class="grid grid--3">
-        <ServiceCard title="Fotografické služby" summary="Reportáž, produktová a architektonická fotografie včetně upravených souborů pro web a sociální sítě." href="/sluzby/foto/" image={landscapeImg} imageAlt="[DOPLNIT: Reálná ukázka fotografické služby]" />
-        <ServiceCard title="Video produkce" summary="Krátká videa, firemní příběhy, reportáže a obsah pro sociální sítě od přípravy po finální záběry." href="/sluzby/video/" image={heroImg} imageAlt="[DOPLNIT: Reálná ukázka video produkce]" />
-        <ServiceCard title="Letecké záběry dronem" summary="Orientační pohledy na stavby, areály, obce a krajinu s důrazem na bezpečnost a schválení letu." href="/sluzby/dron/" image={fullBleedImg} imageAlt="[DOPLNIT: Reálný letecký záběr]" />
+        <ServiceCard title="Fotografické služby" summary="Reportáž, produktová a architektonická fotografie včetně upravených souborů pro web a sociální sítě." href="/sluzby/foto/" image={serviceImages.photo.image} imageAlt={serviceImages.photo.imageAlt} />
+        <ServiceCard title="Video produkce" summary="Krátká videa, firemní příběhy, reportáže a obsah pro sociální sítě od přípravy po finální záběry." href="/sluzby/video/" image={serviceImages.video.image} imageAlt={serviceImages.video.imageAlt} />
+        <ServiceCard title="Letecké záběry dronem" summary="Orientační pohledy na stavby, areály, obce a krajinu s důrazem na bezpečnost a schválení letu." href="/sluzby/dron/" image={serviceImages.drone.image} imageAlt={serviceImages.drone.imageAlt} />
       </div>
     </div>
   </section>
@@ -33,10 +96,10 @@ import heroImg from '../../assets/placeholders/hero-16x9.png';
     <div class="container">
       <SectionHeader eyebrow="Pro konkrétní potřeby" heading="Řešení podle vašeho projektu" />
       <div class="grid grid--2">
-        <ServiceCard title="Pro firmy a značky" summary="Promo fotografie, práce pro produkty i obsah pro sociální sítě." href="/pro-firmy/" image={landscapeImg} imageAlt="[DOPLNIT: Reálná ukázka práce pro firmu]" />
-        <ServiceCard title="Stavební fotoreporty" summary="Průběžná dokumentace stavby pro investory, developery a realizační firmy." href="/stavebni-fotoreporty/" image={fullBleedImg} imageAlt="[DOPLNIT: Reálný snímek z průběhu stavby]" />
-        <ServiceCard title="Interiéry a architektura" summary="Fotografická prezentace interiérů, exteriérů a architektonických projektů." href="/interiery-architektura/" image={heroImg} imageAlt="[DOPLNIT: Reálná ukázka interiéru]" />
-        <ServiceCard title="Obce, města a turismus" summary="Focení míst, akcí a destinací pro veřejnou i propagační komunikaci." href="/obce-mesta-turismus/" image={fullBleedImg} imageAlt="[DOPLNIT: Reálný pohled na město nebo obci]" />
+        <ServiceCard title="Pro firmy a značky" summary="Promo fotografie, práce pro produkty i obsah pro sociální sítě." href="/pro-firmy/" image={serviceImages.company.image} imageAlt={serviceImages.company.imageAlt} />
+        <ServiceCard title="Stavební fotoreporty" summary="Průběžná dokumentace stavby pro investory, developery a realizační firmy." href="/stavebni-fotoreporty/" image={serviceImages.construction.image} imageAlt={serviceImages.construction.imageAlt} />
+        <ServiceCard title="Interiéry a architektura" summary="Fotografická prezentace interiérů, exteriérů a architektonických projektů." href="/interiery-architektura/" image={serviceImages.architecture.image} imageAlt={serviceImages.architecture.imageAlt} />
+        <ServiceCard title="Obce, města a turismus" summary="Focení míst, akcí a destinací pro veřejnou i propagační komunikaci." href="/obce-mesta-turismus/" image={serviceImages.tourism.image} imageAlt={serviceImages.tourism.imageAlt} />
       </div>
     </div>
   </section>

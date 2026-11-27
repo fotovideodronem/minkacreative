@@ -31,9 +31,12 @@ const projects = defineCollection({
       brief: z.string().optional(),
       result: z.string().optional(),
 
-      // Obrázky — zpracovány přes astro:assets
-      cover: image(),
-      coverAlt: z.string(),
+      // Library references are preferred; direct image paths remain for existing entries.
+      coverMedia: z.string().nullish(),
+      galleryMedia: z.array(z.string()).default([]),
+      videoMedia: z.string().nullish(),
+      cover: image().nullish(),
+      coverAlt: z.string().nullish(),
       gallery: z
         .array(
           z.object({
@@ -45,11 +48,11 @@ const projects = defineCollection({
         .default([]),
 
       // Video
-      videoUrl: z.string().optional(),
-      videoPoster: image().optional(),
-      videoPosterAlt: z.string().optional(),
-      videoTitle: z.string().optional(),
-      videoDuration: z.string().optional(),
+      videoUrl: z.string().nullish(),
+      videoPoster: image().nullish(),
+      videoPosterAlt: z.string().nullish(),
+      videoTitle: z.string().nullish(),
+      videoDuration: z.string().nullish(),
 
       // Citát klienta
       testimonial: z
@@ -69,6 +72,44 @@ const projects = defineCollection({
       seoTitle: z.string().optional(),
       seoDescription: z.string().optional(),
     }),
+});
+
+const media = defineCollection({
+    loader: glob({ pattern: '**/*.yaml', base: './src/content/media' }),
+    schema: ({ image }) =>
+      z
+        .object({
+          title: z.string(),
+          kind: z.enum(['image', 'video']).default('image'),
+          category: z.enum(['home', 'services', 'portfolio', 'about', 'logos', 'other']).default('other'),
+          image: image().nullish(),
+          videoUrl: z.string().nullish(),
+          alt: z.string().default(''),
+          caption: z.string().nullish(),
+          description: z.string().nullish(),
+          credit: z.string().nullish(),
+          tags: z.array(z.string()).default([]),
+          seoTitle: z.string().nullish(),
+          seoDescription: z.string().nullish(),
+          videoDuration: z.string().nullish(),
+        })
+        .superRefine((entry, context) => {
+          if (!entry.image) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['image'],
+              message: 'Každý záznam musí obsahovat obrázek nebo náhled videa.',
+            });
+          }
+
+          if (entry.kind === 'video' && !entry.videoUrl) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['videoUrl'],
+              message: 'Video záznam musí obsahovat URL videa.',
+            });
+          }
+        }),
 });
 
 const testimonials = defineCollection({
@@ -105,7 +146,18 @@ const pageCopy = defineCollection({
     lead: z.string().optional(),
     summary: z.string().optional(),
     summaryText: z.string().optional(),
+    heroMedia: z.string().nullish(),
+    fullBleedMedia: z.string().nullish(),
+    galleryMedia: z.array(z.string()).default([]),
+    videoMedia: z.string().nullish(),
+    photoServiceMedia: z.string().nullish(),
+    videoServiceMedia: z.string().nullish(),
+    droneServiceMedia: z.string().nullish(),
+    companyServiceMedia: z.string().nullish(),
+    constructionServiceMedia: z.string().nullish(),
+    architectureServiceMedia: z.string().nullish(),
+    tourismServiceMedia: z.string().nullish(),
   }),
 });
 
-export const collections = { projects, testimonials, faqs, pageCopy };
+export const collections = { media, projects, testimonials, faqs, pageCopy };

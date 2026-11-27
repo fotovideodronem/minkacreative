@@ -46,6 +46,7 @@ export interface ServiceVideoPreview {
   videoUrl?: string;
   duration?: string;
   caption?: string;
+  description?: string;
 }
 
 export interface ServicePageData {

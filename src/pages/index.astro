@@ -14,6 +14,15 @@ import ContactCtaBand from '../components/ContactCtaBand.astro';
 import { siteConfig } from '../config/site';
 import { getCollection } from 'astro:content';
 import { getPageCopy } from '../utils/pageCopy';
+import {
+  getMediaLibrary,
+  getMediaRecord,
+  requireMediaImage,
+  requireMediaRecord,
+  toGalleryItem,
+  toMediaStructuredData,
+  toVideoPreview,
+} from '../utils/media';
 
 import heroPoster from '../assets/placeholders/hero-16x9.png';
 import fullBleedImg from '../assets/placeholders/fullbleed-21x9.png';
@@ -53,35 +62,6 @@ const coreServices = [
 ];
 
 const segmentLinks = siteConfig.navigation.servicesGroups[1]?.items ?? [];
-
-const featuredProjects = [
-  {
-    title: '[DOPLNIT: Vybraný projekt 1]',
-    href: '/portfolio/ukazka-stavba/',
-    summary: '[DOPLNIT: Krátké shrnutí zakázky na 1 až 2 věty (zadání a výsledek).]',
-    image: landscapeImg,
-    imageAlt: '[DOPLNIT: Zástupný snímek vybraného projektu 1]',
-    year: 2026,
-    location: 'Vlašim',
-    services: ['Foto', 'Dron'],
-    client: '[DOPLNIT: Název klienta]',
-    showClientName: true,
-    relationship: 'direct' as const,
-  },
-  {
-    title: '[DOPLNIT: Vybraný projekt 2]',
-    href: '/portfolio/ukazka-firemni-video/',
-    summary: '[DOPLNIT: Krátké shrnutí zakázky — např. stavební postup nebo firemní promo.]',
-    image: heroPoster,
-    imageAlt: '[DOPLNIT: Zástupný snímek vybraného projektu 2]',
-    year: 2026,
-    location: 'Benešov',
-    services: ['Video'],
-    client: 'Skrytý klient',
-    showClientName: false,
-    relationship: 'subcontract' as const,
-  },
-];
 
 const showcaseGallery = [
   {
@@ -135,8 +115,135 @@ const trustFacts = [
   },
 ];
 
-const clientLogos = siteConfig.clientLogos;
 const homeCopy = await getPageCopy('home');
+const mediaLibrary = await getMediaLibrary();
+const homeHeroMedia = getMediaRecord(
+  mediaLibrary,
+  homeCopy?.data.heroMedia,
+  'home page hero'
+);
+const fullBleedMedia = getMediaRecord(
+  mediaLibrary,
+  homeCopy?.data.fullBleedMedia,
+  'home page full-bleed image'
+);
+const homeGallery = homeCopy?.data.galleryMedia.length
+  ? homeCopy.data.galleryMedia.map((mediaId) =>
+      toGalleryItem(
+        requireMediaRecord(mediaLibrary, mediaId, 'home page gallery'),
+        'home page gallery'
+      )
+    )
+  : showcaseGallery;
+const homeVideoRecord = getMediaRecord(
+  mediaLibrary,
+  homeCopy?.data.videoMedia,
+  'home page video'
+);
+const homeVideo = homeVideoRecord
+  ? toVideoPreview(homeVideoRecord, 'home page video')
+  : undefined;
+const homeServiceMediaIds = [
+  homeCopy?.data.photoServiceMedia,
+  homeCopy?.data.videoServiceMedia,
+  homeCopy?.data.droneServiceMedia,
+];
+const homeServices = coreServices.map((service, index) => {
+  const media = getMediaRecord(
+    mediaLibrary,
+    homeServiceMediaIds[index],
+    `home page ${service.eyebrow} service card`
+  );
+  return media
+    ? {
+        ...service,
+        image: requireMediaImage(media, `home page ${service.eyebrow} service card`),
+        imageAlt: media.alt,
+      }
+    : service;
+});
+const featuredProjects = (await getCollection('projects'))
+  .filter(({ data }) => data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 2)
+  .map((entry) => {
+    const media = getMediaRecord(
+      mediaLibrary,
+      entry.data.coverMedia,
+      `featured project "${entry.id}"`
+    );
+    const image = media
+      ? requireMediaImage(media, `featured project "${entry.id}"`)
+      : entry.data.cover;
+    if (!image) {
+      throw new Error(`Featured project "${entry.id}" has no cover image.`);
+    }
+
+    return {
+      title: entry.data.title,
+      href: `/portfolio/${entry.id}/`,
+      summary: entry.data.summary,
+      image,
+      imageAlt: media?.alt || entry.data.coverAlt || entry.data.title,
+      year: entry.data.year,
+      location: entry.data.location,
+      services: entry.data.services.map((service) => ({
+        foto: 'Foto',
+        video: 'Video',
+        dron: 'Dron',
+      })[service]),
+      client: entry.data.client,
+      showClientName: entry.data.showClientName,
+      relationship: entry.data.relationship,
+    };
+  });
+const clientLogos = siteConfig.clientLogos.map((logo) => {
+  const media = requireMediaRecord(
+    mediaLibrary,
+    logo.media,
+    `client logo "${logo.name}"`
+  );
+  return {
+    name: logo.name,
+    image: requireMediaImage(media, `client logo "${logo.name}"`),
+    alt: logo.alt || media.alt,
+  };
+});
+const homeMediaStructuredData = [
+  ...(homeHeroMedia
+    ? [
+        {
+          '@type': 'ImageObject',
+          name: homeHeroMedia.seoTitle || 'Minka Creative - úvodní fotografie',
+          description:
+            homeHeroMedia.seoDescription ||
+            homeCopy?.data.seoDescription ||
+            'Ukázková fotografie služeb Minka Creative.',
+          caption: homeHeroMedia.alt,
+          contentUrl: new URL(
+            requireMediaImage(homeHeroMedia, 'home page hero SEO').src,
+            Astro.site
+          ).toString(),
+        },
+      ]
+    : []),
+  ...homeGallery.map((item) => toMediaStructuredData(item, Astro.site)),
+  ...(homeVideo?.videoUrl
+    ? [
+        {
+          '@type': 'VideoObject',
+          name: homeVideo.title,
+          description:
+            homeVideo.description ||
+            homeVideo.caption ||
+            homeCopy?.data.seoDescription ||
+            'Video ukázka Minka Creative.',
+          thumbnailUrl: new URL(homeVideo.poster.src, Astro.site).toString(),
+          contentUrl: homeVideo.videoUrl,
+        },
+      ]
+    : []),
+];
 const homeSummaryFallback = `[DOPLNIT: Souhrn na 50 až 80 slov, který přímo odpovídá na otázky: kdo
   (Jakub Minka / Minka Creative), co (foto, video, dron), pro koho (firmy,
   stavební firmy a developeři, realitky a architekti, obce, akce a maturitní
@@ -149,14 +256,27 @@ const testimonials = (await getCollection('testimonials'))
 <BaseLayout
   title="Minka Creative | Fotograf a tvůrce videí — Vlašim, Benešov, Praha"
   description="[DOPLNIT: Popis titulní stránky — foto, video a dron pro firmy, stavby, reality, obce a akce.]"
+  image={homeHeroMedia ? requireMediaImage(homeHeroMedia, 'home page social image').src : undefined}
 >
+  {homeMediaStructuredData.length > 0 && (
+    <script
+      slot="head"
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': homeMediaStructuredData,
+      })}
+    />
+  )}
+
   <!-- 1. Hero s videem / posterem přes celou šířku -->
   <HeroSection
     eyebrow={homeCopy?.data.eyebrow || 'Minka Creative · Foto · Video · Dron'}
     heading={homeCopy?.data.heading || '[DOPLNIT: Hlavní nadpis titulky — krátký a srozumitelný]'}
     lead={homeCopy?.data.lead || '[DOPLNIT: Jedna stručná věta, co děláš, pro koho a kde působíš.]'}
-    poster={heroPoster}
-    posterAlt="[DOPLNIT: Popis hlavního náhledového snímku titulky]"
+    poster={homeHeroMedia ? requireMediaImage(homeHeroMedia, 'home page hero') : heroPoster}
+    posterAlt={homeHeroMedia?.alt || '[DOPLNIT: Popis hlavního náhledového snímku titulky]'}
     primaryCta={{ label: 'Nezávazná poptávka', href: '/kontakt/' }}
     secondaryCta={{ label: 'Portfolio', href: '/portfolio/' }}
   />
@@ -200,7 +320,7 @@ const testimonials = (await getCollection('testimonials'))
 
       <div class="grid grid--3">
         {
-          coreServices.map((service) => (
+          homeServices.map((service) => (
             <ServiceCard
               eyebrow={service.eyebrow}
               title={service.title}
@@ -270,8 +390,8 @@ const testimonials = (await getCollection('testimonials'))
     eyebrow="[DOPLNIT: Štítek celošířkové sekce]"
     heading="[DOPLNIT: Silný vizuální předěl — např. letecké záběry nebo stavby]"
     summary="[DOPLNIT: Jedna až dvě věty přes fotografii s odkazem na konkrétní službu nebo poptávku.]"
-    image={fullBleedImg}
-    imageAlt="[DOPLNIT: Popis celošířkového snímku]"
+    image={fullBleedMedia ? requireMediaImage(fullBleedMedia, 'home page full-bleed image') : fullBleedImg}
+    imageAlt={fullBleedMedia?.alt || '[DOPLNIT: Popis celošířkového snímku]'}
     ctaLabel="Zjistit více"
     ctaHref="/sluzby/dron/"
     height="md"
@@ -287,11 +407,12 @@ const testimonials = (await getCollection('testimonials'))
       />
 
       <VideoBlock
-        title="[DOPLNIT: Název ukázkového videa]"
-        poster={heroPoster}
-        posterAlt="[DOPLNIT: Náhledový snímek ukázkového videa]"
-        duration="[DOPLNIT: 01:30]"
-        caption="[DOPLNIT: Krátký popisek pod videem]"
+        title={homeVideo?.title || '[DOPLNIT: Název ukázkového videa]'}
+        videoUrl={homeVideo?.videoUrl}
+        poster={homeVideo?.poster || heroPoster}
+        posterAlt={homeVideo?.posterAlt || '[DOPLNIT: Náhledový snímek ukázkového videa]'}
+        duration={homeVideo?.duration || '[DOPLNIT: 01:30]'}
+        caption={homeVideo?.caption || '[DOPLNIT: Krátký popisek pod videem]'}
       />
     </div>
   </section>
@@ -305,7 +426,7 @@ const testimonials = (await getCollection('testimonials'))
         lead="Kliknutím na libovolnou fotografii otevřeš náhled přes celou obrazovku."
       />
 
-      <MasonryGallery items={showcaseGallery} galleryId="titulka-vyber" />
+      <MasonryGallery items={homeGallery} galleryId="titulka-vyber" />
     </div>
   </section>
 

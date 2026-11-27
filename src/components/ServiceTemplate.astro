@@ -13,6 +13,15 @@ import Lightbox from './Lightbox.astro';
 import { siteConfig } from '../config/site';
 import type { ServicePageData } from '../types/service';
 import { getPageCopy } from '../utils/pageCopy';
+import {
+  getMediaLibrary,
+  getMediaRecord,
+  requireMediaRecord,
+  requireMediaImage,
+  toGalleryItem,
+  toMediaStructuredData,
+  toVideoPreview,
+} from '../utils/media';
 
 /**
  * Znovupoužitelná šablona stránky služby nebo segmentu (Fáze 4 zadání).
@@ -26,8 +35,29 @@ interface Props {
 const { data, galleryId } = Astro.props;
 const pageKey = Astro.url.pathname.split('/').filter(Boolean).join('-');
 const pageCopy = await getPageCopy(pageKey);
+const mediaLibrary = await getMediaLibrary();
+const heroMedia = getMediaRecord(
+  mediaLibrary,
+  pageCopy?.data.heroMedia,
+  `page copy "${pageKey}" hero`
+);
+const galleryMedia = pageCopy?.data.galleryMedia.map((mediaId) =>
+  toGalleryItem(
+    requireMediaRecord(mediaLibrary, mediaId, `page copy "${pageKey}" gallery`),
+    `page copy "${pageKey}" gallery`
+  )
+);
+const videoMedia = getMediaRecord(
+  mediaLibrary,
+  pageCopy?.data.videoMedia,
+  `page copy "${pageKey}" video`
+);
 const pageData: ServicePageData = {
   ...data,
+  heroImage: heroMedia ? requireMediaImage(heroMedia, `page "${pageKey}" hero`) : data.heroImage,
+  heroImageAlt: heroMedia?.alt || data.heroImageAlt,
+  gallery: galleryMedia?.length ? galleryMedia : data.gallery,
+  video: videoMedia ? toVideoPreview(videoMedia, `page "${pageKey}" video`) : data.video,
   seoTitle: pageCopy?.data.seoTitle || data.seoTitle,
   seoDescription: pageCopy?.data.seoDescription || data.seoDescription,
   eyebrow: pageCopy?.data.eyebrow || data.eyebrow,
@@ -78,11 +108,38 @@ const serviceStructuredData = {
         },
       ],
     },
+    ...(heroMedia
+      ? [
+          {
+            '@type': 'ImageObject',
+            name: heroMedia.seoTitle || pageData.title,
+            description: heroMedia.seoDescription || pageData.summaryLead,
+            caption: pageData.heroImageAlt,
+            contentUrl: new URL(pageData.heroImage.src, Astro.site).toString(),
+          },
+        ]
+      : []),
+    ...pageData.gallery.map((item) => toMediaStructuredData(item, Astro.site)),
+    ...(pageData.video?.videoUrl
+      ? [
+          {
+            '@type': 'VideoObject',
+            name: pageData.video.title,
+            description: pageData.video.description || pageData.video.caption || pageData.summaryLead,
+            thumbnailUrl: new URL(pageData.video.poster.src, Astro.site).toString(),
+            contentUrl: pageData.video.videoUrl,
+          },
+        ]
+      : []),
   ],
 };
 ---
 
-<BaseLayout title={pageData.seoTitle} description={pageData.seoDescription}>
+<BaseLayout
+  title={pageData.seoTitle}
+  description={pageData.seoDescription}
+  image={pageData.heroImage.src}
+>
   <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(serviceStructuredData)} />
 
   <!-- 1. Úvod služby: drobečková navigace, H1, přímý souhrn (50–80 slov) a hlavní snímek -->
@@ -117,8 +174,8 @@ const serviceStructuredData = {
 
         <div class="service-hero__media">
           <Picture
-            src={data.heroImage}
-            alt={data.heroImageAlt}
+            src={pageData.heroImage}
+            alt={pageData.heroImageAlt}
             formats={['avif', 'webp']}
             widths={[480, 768, 1200]}
             sizes="(min-width: 64rem) 46vw, 94vw"

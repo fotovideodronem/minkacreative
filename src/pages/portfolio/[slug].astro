@@ -7,6 +7,15 @@ import Lightbox from '../../components/Lightbox.astro';
 import VideoBlock from '../../components/VideoBlock.astro';
 import TestimonialCard from '../../components/TestimonialCard.astro';
 import ContactCtaBand from '../../components/ContactCtaBand.astro';
+import {
+  getMediaLibrary,
+  getMediaRecord,
+  requireMediaImage,
+  requireMediaRecord,
+  toGalleryItem,
+  toMediaStructuredData,
+  toVideoPreview,
+} from '../../utils/media';
 
 export async function getStaticPaths() {
   const entries = await getCollection('projects');
@@ -18,6 +27,43 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { data } = entry;
+const mediaLibrary = await getMediaLibrary();
+const coverMedia = getMediaRecord(
+  mediaLibrary,
+  data.coverMedia,
+  `project "${entry.id}" cover`
+);
+const coverImage = coverMedia
+  ? requireMediaImage(coverMedia, `project "${entry.id}" cover`)
+  : data.cover;
+if (!coverImage) {
+  throw new Error(`Project "${entry.id}" has no cover image.`);
+}
+const coverAlt = coverMedia?.alt || data.coverAlt || data.title;
+const libraryGallery = data.galleryMedia.map((mediaId) =>
+  toGalleryItem(
+    requireMediaRecord(mediaLibrary, mediaId, `project "${entry.id}" gallery`),
+    `project "${entry.id}" gallery`
+  )
+);
+const videoMedia = getMediaRecord(
+  mediaLibrary,
+  data.videoMedia,
+  `project "${entry.id}" video`
+);
+const projectVideo = videoMedia
+  ? toVideoPreview(videoMedia, `project "${entry.id}" video`)
+  : data.videoUrl && data.videoPoster
+    ? {
+        title: data.videoTitle ?? data.title,
+        poster: data.videoPoster,
+        posterAlt: data.videoPosterAlt ?? '',
+        videoUrl: data.videoUrl,
+        duration: data.videoDuration || undefined,
+        caption: undefined,
+        description: undefined,
+      }
+    : undefined;
 
 const { Content } = await render(entry);
 
@@ -44,11 +90,13 @@ const pageTitle = data.seoTitle ?? `${data.title} | Portfolio | Minka Creative`;
 const pageDesc = data.seoDescription ?? data.summary;
 
 // Gallery items pro MasonryGallery + Lightbox
-const galleryItems = data.gallery.map((g) => ({
-  image: g.image,
-  alt: g.alt,
-  caption: g.caption,
-}));
+const galleryItems = libraryGallery.length
+  ? libraryGallery
+  : data.gallery.map((g) => ({
+      image: g.image,
+      alt: g.alt,
+      caption: g.caption,
+    }));
 
 const projectUrl = new URL(Astro.url.pathname, Astro.site).toString();
 const projectStructuredData = {
@@ -79,35 +127,36 @@ const projectStructuredData = {
     },
     {
       '@type': 'ImageObject',
-      name: data.title,
-      description: data.summary,
-      caption: data.coverAlt,
-      contentUrl: new URL(data.cover.src, Astro.site).toString(),
-      thumbnailUrl: new URL(data.cover.src, Astro.site).toString(),
+      name: coverMedia?.seoTitle || data.title,
+      description: coverMedia?.seoDescription || data.summary,
+      caption: coverAlt,
+      contentUrl: new URL(coverImage.src, Astro.site).toString(),
+      thumbnailUrl: new URL(coverImage.src, Astro.site).toString(),
     },
-    ...(data.videoUrl
+    ...galleryItems.map((item) => toMediaStructuredData(item, Astro.site)),
+    ...(projectVideo?.videoUrl
       ? [{
           '@type': 'VideoObject',
-          name: data.videoTitle ?? data.title,
-          description: data.summary,
-          thumbnailUrl: data.videoPoster
-            ? new URL(data.videoPoster.src, Astro.site).toString()
+          name: projectVideo.title,
+          description: projectVideo.description || data.summary,
+          thumbnailUrl: projectVideo.poster
+            ? new URL(projectVideo.poster.src, Astro.site).toString()
             : undefined,
-          contentUrl: data.videoUrl,
+          contentUrl: projectVideo.videoUrl,
         }]
       : []),
   ],
 };
 ---
 
-<BaseLayout title={pageTitle} description={pageDesc} image={data.cover.src} type="article">
+<BaseLayout title={pageTitle} description={pageDesc} image={coverImage.src} type="article">
   <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(projectStructuredData)} />
   {/* Preload cover image (LCP) */}
   <link
     slot="head"
     rel="preload"
     as="image"
-    href={data.cover.src}
+    href={coverImage.src}
     fetchpriority="high"
   />
 
@@ -175,8 +224,8 @@ const projectStructuredData = {
         {/* Cover obrázek */}
         <div class="project-hero__img-col">
           <Picture
-            src={data.cover}
-            alt={data.coverAlt}
+            src={coverImage}
+            alt={coverAlt}
             formats={['avif', 'webp']}
             widths={[640, 960, 1280]}
             sizes="(max-width: 768px) 100vw, 60vw"
@@ -222,15 +271,16 @@ const projectStructuredData = {
   )}
 
   {/* ---- Video ---- */}
-  {data.videoUrl && data.videoPoster && (
+  {projectVideo?.videoUrl && (
     <section class="section">
       <div class="container">
         <VideoBlock
-          src={data.videoUrl}
-          poster={data.videoPoster}
-          posterAlt={data.videoPosterAlt ?? '[DOPLNIT: popis náhledu videa]'}
-          title={data.videoTitle ?? '[DOPLNIT: název videa]'}
-          duration={data.videoDuration}
+          src={projectVideo.videoUrl}
+          poster={projectVideo.poster}
+          posterAlt={projectVideo.posterAlt}
+          title={projectVideo.title}
+          duration={projectVideo.duration}
+          caption={projectVideo.caption}
         />
       </div>
     </section>

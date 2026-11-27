@@ -27,9 +27,12 @@ export interface SocialLink {
 
 export interface ClientLogo {
   name: string;
-  image: string;
+  media: string;
   alt: string;
 }
+
+const socialLinks: SocialLink[] = siteSettings.socialLinks;
+const clientLogos: ClientLogo[] = siteSettings.clientLogos;
 
 /**
  * Jedna proměnná pro přepnutí varianty vzhledu celého webu.
@@ -65,11 +68,8 @@ export const siteConfig = {
     siteId: '',
   },
 
-  socialLinks: siteSettings.socialLinks.map((link) => ({
-    ...link,
-    id: link.id as SocialLink['id'],
-  })),
-  clientLogos: siteSettings.clientLogos satisfies ClientLogo[],
+  socialLinks,
+  clientLogos,
 
   navigation: {
     servicesOverview: {
