@@ -1,17 +1,12 @@
 {
   "contact": {
-    "phoneDisplay": "+420 731 055 983",
+    "phoneDisplay": "+420731055983",
     "phoneHref": "tel:+420731055983",
-    "email": "DOPLNIT: e-mail",
-    "ico": "DOPLNIT: IČO",
-    "serviceArea": "Vlašim, Benešov, Středočeský kraj, Praha",
-    "secondaryArea": "druhotně Vysočina a Jižní Čechy"
+    "email": "mail@fotovideodronem.cz",
+    "ico": "03942074",
+    "serviceArea": "Vlašim, Benešov, Praha",
+    "secondaryArea": "Pelhřimov, Humpolec, Jihlava, Tábor"
   },
-  "socialLinks": [
-    { "id": "instagram", "label": "Instagram", "url": "DOPLNIT: Instagram URL" },
-    { "id": "facebook", "label": "Facebook", "url": "DOPLNIT: Facebook URL" },
-    { "id": "youtube", "label": "YouTube", "url": "DOPLNIT: YouTube URL" },
-    { "id": "linkedin", "label": "LinkedIn", "url": "DOPLNIT: LinkedIn URL" }
-  ],
+  "socialLinks": [],
   "clientLogos": []
 }
