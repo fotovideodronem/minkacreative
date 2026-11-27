@@ -1,0 +1,19 @@
+# Výstup buildu a cache Astra
+dist/
+.astro/
+
+# Závislosti
+node_modules/
+
+# Logy
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# Prostředí
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store

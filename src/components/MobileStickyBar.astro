@@ -1,0 +1,59 @@
+---
+import { siteConfig } from '../config/site';
+---
+
+<div class="mobile-sticky-bar" role="region" aria-label="Rychlý kontakt">
+  <a class="mobile-sticky-bar__btn mobile-sticky-bar__btn--call" href={siteConfig.contact.phoneHref}>
+    Zavolat
+  </a>
+  <a class="mobile-sticky-bar__btn mobile-sticky-bar__btn--write" href={siteConfig.navigation.cta.href}>
+    Napsat
+  </a>
+</div>
+
+<style>
+  .mobile-sticky-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-sticky);
+    height: var(--mobile-bar-height);
+    padding: var(--space-2) var(--gutter);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    background-color: var(--color-header-bg);
+    backdrop-filter: blur(var(--space-3));
+    border-top: var(--border-thin) solid var(--color-border);
+  }
+
+  @media (min-width: 64rem) {
+    .mobile-sticky-bar {
+      display: none;
+    }
+  }
+
+  .mobile-sticky-bar__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-target-min);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+  }
+
+  .mobile-sticky-bar__btn--call {
+    color: var(--color-text);
+    background-color: var(--color-surface-elevated);
+    border: var(--border-thin) solid var(--color-border-strong);
+  }
+
+  .mobile-sticky-bar__btn--write {
+    color: var(--color-accent-text);
+    background-color: var(--color-accent);
+  }
+</style>

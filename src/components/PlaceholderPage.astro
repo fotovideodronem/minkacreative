@@ -1,0 +1,22 @@
+---
+interface Props {
+  eyebrow?: string;
+  heading: string;
+  routeNote: string;
+}
+
+const {
+  eyebrow = 'Zástupná stránka · Fáze 1',
+  heading,
+  routeNote,
+} = Astro.props;
+---
+
+<section class="container placeholder-page">
+  <span class="placeholder-page__eyebrow">{eyebrow}</span>
+  <h1 class="placeholder-page__title">{heading}</h1>
+  <div class="placeholder-page__box">
+    <p>[DOPLNIT: obsah stránky podle zadání a podkladů od Jakuba]</p>
+    <p class="placeholder-page__meta">{routeNote}</p>
+  </div>
+</section>

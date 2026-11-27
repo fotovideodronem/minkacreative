@@ -1,0 +1,226 @@
+---
+import { isPlaceholderValue, siteConfig } from '../config/site';
+
+const currentYear = new Date().getFullYear();
+const emailIsPlaceholder = isPlaceholderValue(siteConfig.contact.email);
+const icoIsPlaceholder = isPlaceholderValue(siteConfig.contact.ico);
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <!-- Značka a oblast působení -->
+    <div class="site-footer__col">
+      <p class="site-footer__brand">{siteConfig.brandName}</p>
+      <p class="site-footer__text">
+        {siteConfig.ownerName} &middot; {siteConfig.ownerRole}
+      </p>
+      <p class="site-footer__muted">
+        Působnost: {siteConfig.contact.serviceArea} ({siteConfig.contact.secondaryArea}).
+      </p>
+    </div>
+
+    <!-- Kontakty -->
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Kontakt</h2>
+      <ul class="site-footer__list">
+        <li>
+          <a class="site-footer__link" href={siteConfig.contact.phoneHref}>
+            {siteConfig.contact.phoneDisplay}
+          </a>
+        </li>
+        <li>
+          {
+            emailIsPlaceholder ? (
+              <span class="placeholder-badge">{siteConfig.contact.email}</span>
+            ) : (
+              <a class="site-footer__link" href={`mailto:${siteConfig.contact.email}`}>
+                {siteConfig.contact.email}
+              </a>
+            )
+          }
+        </li>
+        <li>
+          {
+            icoIsPlaceholder ? (
+              <span class="placeholder-badge">{siteConfig.contact.ico}</span>
+            ) : (
+              <span class="site-footer__muted">IČO: {siteConfig.contact.ico}</span>
+            )
+          }
+        </li>
+      </ul>
+    </div>
+
+    <!-- Užitečné odkazy -->
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Informace</h2>
+      <ul class="site-footer__list">
+        <li>
+          <a class="site-footer__link" href={siteConfig.navigation.servicesOverview.href}>
+            {siteConfig.navigation.servicesOverview.label}
+          </a>
+        </li>
+        <li>
+          <a class="site-footer__link" href={siteConfig.footerLinks.local.href}>
+            {siteConfig.footerLinks.local.label}
+          </a>
+        </li>
+        <li>
+          <a class="site-footer__link" href={siteConfig.footerLinks.faq.href}>
+            {siteConfig.footerLinks.faq.label}
+          </a>
+        </li>
+        <li>
+          <a
+            class="site-footer__link"
+            href={siteConfig.externalLinks.weddings.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {siteConfig.externalLinks.weddings.label} (minka-weddings.cz) &nearr;
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Sociální sítě -->
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Sítě</h2>
+      <ul class="site-footer__list">
+        {
+          siteConfig.socialLinks.map((social) => (
+            <li>
+              {isPlaceholderValue(social.url) ? (
+                <span class="site-footer__placeholder-row">
+                  <span>{social.label}:</span>
+                  <span class="placeholder-badge">{social.url}</span>
+                </span>
+              ) : (
+                <a
+                  class="site-footer__link"
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {social.label} &nearr;
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="container site-footer__bottom">
+    <p class="site-footer__muted">
+      &copy; {currentYear} {siteConfig.brandName} &middot; {siteConfig.ownerName}
+    </p>
+    <a class="site-footer__link site-footer__legal" href={siteConfig.footerLinks.legal.href}>
+      {siteConfig.footerLinks.legal.label}
+    </a>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-16);
+    padding-block: var(--space-12) var(--space-8);
+    background-color: var(--color-surface);
+    border-top: var(--border-thin) solid var(--color-border);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .site-footer__grid {
+      grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+    }
+  }
+
+  .site-footer__col {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+  }
+
+  .site-footer__brand {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+  }
+
+  .site-footer__heading {
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .site-footer__text {
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+
+  .site-footer__muted {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .site-footer__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .site-footer__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--space-8);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .site-footer__link:hover {
+    color: var(--color-accent);
+  }
+
+  .site-footer__placeholder-row {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .site-footer__bottom {
+    margin-top: var(--space-10);
+    padding-top: var(--space-6);
+    border-top: var(--border-thin) solid var(--color-border);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .site-footer__legal {
+    color: var(--color-text-muted);
+  }
+</style>

@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PlaceholderPage from '../../components/PlaceholderPage.astro';
+
+export function getStaticPaths() {
+  return [
+    {
+      params: { slug: 'ukazka-projektu' },
+      props: { title: '[DOPLNIT: Název projektu]' },
+    },
+  ];
+}
+
+const { slug } = Astro.params;
+const { title } = Astro.props;
+---
+
+<BaseLayout
+  title={`${title} | Portfolio | Minka Creative`}
+  description="[DOPLNIT: detail projektu]"
+>
+  <PlaceholderPage
+    heading={title}
+    routeNote={`Trasa: /portfolio/${slug}/ · Zástupná dynamická šablona detailu projektu (Fáze 5).`}
+  />
+</BaseLayout>
