@@ -32,11 +32,9 @@ export interface ClientLogo {
 }
 
 /**
- * Jedna proměnná pro přepnutí varianty vzhledu celého webu:
- * - 'dark'  = tmavý galerijní základ s jantarovým akcentem
- * - 'light' = světlý redakční základ s jantarovým akcentem
+ * Jedna proměnná pro přepnutí varianty vzhledu celého webu.
  */
-export const ACTIVE_THEME: ThemeVariant = 'dark';
+export const ACTIVE_THEME: ThemeVariant = 'light';
 
 export const siteConfig = {
   brandName: 'Minka Creative',

@@ -267,7 +267,10 @@ const serviceStructuredData = {
 
 <style>
   .service-hero {
-    padding-block: var(--space-8) var(--space-12);
+    padding-block: var(--space-8) var(--space-16);
+    background:
+      radial-gradient(circle at 92% 8%, rgba(82, 96, 237, 0.08), transparent 26rem),
+      var(--color-bg);
   }
 
   @media (min-width: 48rem) {
@@ -334,8 +337,8 @@ const serviceStructuredData = {
   .service-hero__summary-box {
     padding: var(--space-4) var(--space-5);
     background-color: var(--color-placeholder-bg);
-    border: var(--border-thin) dashed var(--color-placeholder-border);
-    border-radius: var(--radius-md);
+    border: var(--border-thin) solid var(--color-placeholder-border);
+    border-radius: var(--radius-lg);
     font-size: var(--text-sm);
     color: var(--color-placeholder-text);
   }

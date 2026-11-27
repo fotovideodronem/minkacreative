@@ -93,6 +93,16 @@ const HeadingTag = headingLevel;
 
   .section-header__title {
     font-size: var(--text-3xl);
+    max-width: 19ch;
+    text-wrap: balance;
+  }
+
+  .section-header .eyebrow::before {
+    content: '{ ';
+  }
+
+  .section-header .eyebrow::after {
+    content: ' }';
   }
 
   .section-header__action {

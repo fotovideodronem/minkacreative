@@ -1,0 +1,56 @@
+---
+interface Props {
+  className?: string;
+}
+
+const { className = '' } = Astro.props;
+---
+
+<svg
+  class:list={['brand-logo', className]}
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 320 108"
+  aria-hidden="true"
+  focusable="false"
+>
+  <text class="brand-logo__wordmark" x="5" y="72">MINKA</text>
+  <path class="brand-logo__slash" d="M18 18H34L75 72H59Z" />
+  <path class="brand-logo__rule" d="M18 94H111M208 94H301" />
+  <text class="brand-logo__tagline" x="160" y="101" text-anchor="middle">CREATIVE</text>
+</svg>
+
+<style>
+  .brand-logo {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    color: var(--color-text);
+  }
+
+  .brand-logo__wordmark {
+    fill: currentColor;
+    font-family: 'Space Grotesk', Arial, sans-serif;
+    font-size: 76px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+  }
+
+  .brand-logo__slash {
+    fill: #f2ad3e;
+  }
+
+  .brand-logo__rule {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+
+  .brand-logo__tagline {
+    fill: currentColor;
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.6px;
+  }
+</style>

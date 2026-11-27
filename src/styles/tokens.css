@@ -14,10 +14,10 @@
   --text-sm: 0.875rem;
   --text-base: 1rem;
   --text-lg: 1.125rem;
-  --text-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
-  --text-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
-  --text-3xl: clamp(2rem, 1.6rem + 2vw, 3rem);
-  --text-4xl: clamp(2.375rem, 1.75rem + 3vw, 4rem);
+  --text-xl: clamp(1.35rem, 1.15rem + 0.7vw, 1.75rem);
+  --text-2xl: clamp(1.8rem, 1.35rem + 1.8vw, 3rem);
+  --text-3xl: clamp(2.25rem, 1.6rem + 2.7vw, 4rem);
+  --text-4xl: clamp(2.75rem, 1.75rem + 4.5vw, 5.75rem);
 
   /* Tloušťky písma */
   --font-regular: 400;
@@ -50,18 +50,19 @@
   --space-24: 6rem;
 
   /* Rozvržení a šířky */
-  --container-max: 80rem;
+  --container-max: 90rem;
   --container-narrow: 52rem;
-  --gutter: var(--space-4);
-  --header-height: 4.5rem;
+  --gutter: 1.25rem;
+  --header-height: 5.25rem;
   --mobile-bar-height: 4rem;
   --touch-target-min: 2.75rem;
 
   /* Poloměry zaoblení */
   --radius-none: 0;
   --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.875rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
   --radius-pill: 9999px;
 
   /* Tloušťky rámečků */
@@ -94,12 +95,12 @@
 
 @media (min-width: 48rem) {
   :root {
-    --gutter: var(--space-8);
+    --gutter: 3rem;
   }
 }
 
 /* ==========================================================================
-   Varianta A: Tmavý galerijní základ + jantarový akcent (výchozí)
+   Tmavá varianta
    ========================================================================== */
 :root,
 [data-theme='dark'] {
@@ -132,33 +133,30 @@
 }
 
 /* ==========================================================================
-   Varianta B: Světlý redakční základ + modrý akcent
+   Světlá varianta: bílý základ, hluboká modř a zelený akcent
    ========================================================================== */
 [data-theme='light'] {
   color-scheme: light;
 
-  --color-bg: #f7f5f0;
+  --color-bg: #ffffff;
   --color-surface: #ffffff;
-  --color-surface-elevated: #edeae1;
-  --color-header-bg: rgba(247, 245, 240, 0.9);
-  --color-text: #141518;
-  --color-text-muted: #565963;
-  --color-border: rgba(20, 21, 24, 0.12);
-  --color-border-strong: rgba(20, 21, 24, 0.26);
+  --color-surface-elevated: #f5f6fc;
+  --color-header-bg: rgba(255, 255, 255, 0.92);
+  --color-text: #11143b;
+  --color-text-muted: #5d627d;
+  --color-border: rgba(17, 20, 59, 0.09);
+  --color-border-strong: rgba(17, 20, 59, 0.18);
 
-  /* Modrý akcent přizpůsobený pro vysoký kontrast na světlém pozadí */
-  --color-accent: #1f5396;
-  --color-accent-hover: #174078;
-  --color-accent-ink: #1f5396;
-  --color-accent-text: #ffffff;
-  --color-accent-soft: rgba(31, 83, 150, 0.11);
+  --color-accent: #78e79b;
+  --color-accent-hover: #5bd982;
+  --color-accent-ink: #5260ed;
+  --color-accent-text: #11143b;
+  --color-accent-soft: rgba(82, 96, 237, 0.08);
 
-  /* Zvýraznění zástupného obsahu ve vývojové fázi */
-  --color-placeholder-bg: rgba(31, 83, 150, 0.08);
-  --color-placeholder-border: rgba(31, 83, 150, 0.34);
-  --color-placeholder-text: #174078;
+  --color-placeholder-bg: rgba(82, 96, 237, 0.06);
+  --color-placeholder-border: rgba(82, 96, 237, 0.2);
+  --color-placeholder-text: #4654d7;
 
-  /* Stíny */
-  --shadow-sm: 0 2px 8px rgba(20, 21, 24, 0.06);
-  --shadow-lg: 0 18px 40px rgba(20, 21, 24, 0.12);
+  --shadow-sm: 0 10px 30px rgba(17, 20, 59, 0.08);
+  --shadow-lg: 0 24px 72px rgba(17, 20, 59, 0.14);
 }
