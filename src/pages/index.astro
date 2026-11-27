@@ -1,14 +1,466 @@
 ---
+import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PlaceholderPage from '../components/PlaceholderPage.astro';
+import HeroSection from '../components/HeroSection.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import FullBleedSection from '../components/FullBleedSection.astro';
+import VideoBlock from '../components/VideoBlock.astro';
+import MasonryGallery from '../components/MasonryGallery.astro';
+import Lightbox from '../components/Lightbox.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import ClientLogoStrip from '../components/ClientLogoStrip.astro';
+import ContactCtaBand from '../components/ContactCtaBand.astro';
+import { siteConfig } from '../config/site';
+
+import heroPoster from '../assets/placeholders/hero-16x9.png';
+import fullBleedImg from '../assets/placeholders/fullbleed-21x9.png';
+import landscapeImg from '../assets/placeholders/landscape-4x3.png';
+import portraitImg from '../assets/placeholders/portrait-3x4.png';
+import tallImg from '../assets/placeholders/tall-4x5.png';
+import squareImg from '../assets/placeholders/square-1x1.png';
+
+const preloadedHero = await getImage({
+  src: heroPoster,
+  width: 1440,
+  format: 'webp',
+});
+
+const coreServices = [
+  {
+    eyebrow: 'Foto',
+    title: 'Fotografické služby',
+    summary: '[DOPLNIT: Jedna věta — co fotíš, v jakých formátech a za jakou dobu dodáváš.]',
+    href: '/sluzby/foto/',
+    image: landscapeImg,
+    imageAlt: '[DOPLNIT: Zástupný snímek pro fotografické služby]',
+    priceNote: '[DOPLNIT: Od ... Kč]',
+  },
+  {
+    eyebrow: 'Video',
+    title: 'Videoprodukce',
+    summary: '[DOPLNIT: Jedna věta — firemní videa, reelsky, reportáže od nápadu po střih.]',
+    href: '/sluzby/video/',
+    image: heroPoster,
+    imageAlt: '[DOPLNIT: Zástupný snímek pro videoprodukci]',
+    priceNote: '[DOPLNIT: Od ... Kč]',
+  },
+  {
+    eyebrow: 'Dron',
+    title: 'Letecké záběry dronem',
+    summary: '[DOPLNIT: Jedna věta — letecké foto i video pro stavby, reality, obce a akce.]',
+    href: '/sluzby/dron/',
+    image: fullBleedImg,
+    imageAlt: '[DOPLNIT: Zástupný snímek pro záběry dronem]',
+    priceNote: '[DOPLNIT: Od ... Kč]',
+  },
+];
+
+const segmentLinks = siteConfig.navigation.servicesGroups[1]?.items ?? [];
+
+const featuredProjects = [
+  {
+    title: '[DOPLNIT: Vybraný projekt 1]',
+    href: '/portfolio/ukazka-projektu/',
+    summary: '[DOPLNIT: Krátké shrnutí zakázky na 1 až 2 věty (zadání a výsledek).]',
+    image: landscapeImg,
+    imageAlt: '[DOPLNIT: Zástupný snímek vybraného projektu 1]',
+    year: 2026,
+    location: 'Vlašim',
+    services: ['Foto', 'Dron'],
+    client: '[DOPLNIT: Název klienta]',
+    showClientName: true,
+    relationship: 'direct' as const,
+  },
+  {
+    title: '[DOPLNIT: Vybraný projekt 2]',
+    href: '/portfolio/ukazka-projektu/',
+    summary: '[DOPLNIT: Krátké shrnutí zakázky — např. stavební postup nebo firemní promo.]',
+    image: heroPoster,
+    imageAlt: '[DOPLNIT: Zástupný snímek vybraného projektu 2]',
+    year: 2026,
+    location: 'Benešov',
+    services: ['Video'],
+    client: 'Skrytý klient',
+    showClientName: false,
+    relationship: 'subcontract' as const,
+  },
+];
+
+const showcaseGallery = [
+  {
+    image: portraitImg,
+    alt: '[DOPLNIT: Zástupná fotografie z reálné zakázky 1]',
+    caption: '[DOPLNIT: Popisek snímku — místo a typ zakázky]',
+  },
+  {
+    image: landscapeImg,
+    alt: '[DOPLNIT: Zástupná fotografie z reálné zakázky 2]',
+    caption: '[DOPLNIT: Popisek snímku — místo a typ zakázky]',
+  },
+  {
+    image: tallImg,
+    alt: '[DOPLNIT: Zástupná fotografie z reálné zakázky 3]',
+    caption: '[DOPLNIT: Popisek snímku — místo a typ zakázky]',
+  },
+  {
+    image: squareImg,
+    alt: '[DOPLNIT: Zástupná fotografie z reálné zakázky 4]',
+    caption: '[DOPLNIT: Popisek snímku — místo a typ zakázky]',
+  },
+  {
+    image: heroPoster,
+    alt: '[DOPLNIT: Zástupná fotografie z reálné zakázky 5]',
+    caption: '[DOPLNIT: Popisek snímku — místo a typ zakázky]',
+  },
+  {
+    image: fullBleedImg,
+    alt: '[DOPLNIT: Zástupná fotografie z reálné zakázky 6]',
+    caption: '[DOPLNIT: Popisek snímku — místo a typ zakázky]',
+  },
+];
+
+const trustFacts = [
+  {
+    label: 'Zkušenosti',
+    value: '[OVĚŘIT: 8+ let praxe v foto a video produkci]',
+  },
+  {
+    label: 'Technika a dron',
+    value: '[OVĚŘIT: Vlastní technika, licence a pojištění pro dron]',
+  },
+  {
+    label: 'Produkce na klíč',
+    value: '[OVĚŘIT: Kompletní realizace od přípravy po střih]',
+  },
+  {
+    label: 'Působnost',
+    value: `${siteConfig.contact.serviceArea} (${siteConfig.contact.secondaryArea})`,
+  },
+];
+
+const placeholderLogos = [
+  { name: '[DOPLNIT: Schválené logo klienta 1]', isPlaceholder: true },
+  { name: '[DOPLNIT: Schválené logo klienta 2]', isPlaceholder: true },
+  { name: '[DOPLNIT: Schválené logo klienta 3]', isPlaceholder: true },
+  { name: '[DOPLNIT: Schválené logo klienta 4]', isPlaceholder: true },
+];
 ---
 
 <BaseLayout
-  title="Minka Creative | Fotograf a tvůrce videí"
-  description="[DOPLNIT: popis titulní stránky Minka Creative]"
+  title="Minka Creative | Fotograf a tvůrce videí — Vlašim, Benešov, Praha"
+  description="[DOPLNIT: Popis titulní stránky — foto, video a dron pro firmy, stavby, reality, obce a akce.]"
 >
-  <PlaceholderPage
-    heading="[DOPLNIT: Hlavní nadpis titulní stránky]"
-    routeNote="Trasa: / · Titulní stránka bude naplněna ve Fázi 3."
+  <link slot="head" rel="preload" as="image" href={preloadedHero.src} />
+
+  <!-- 1. Hero s videem / posterem přes celou šířku -->
+  <HeroSection
+    eyebrow="Minka Creative · Foto · Video · Dron"
+    heading="[DOPLNIT: Hlavní nadpis titulky — krátký a srozumitelný]"
+    lead="[DOPLNIT: Jedna stručná věta, co děláš, pro koho a kde působíš.]"
+    poster={heroPoster}
+    posterAlt="[DOPLNIT: Popis hlavního náhledového snímku titulky]"
+    primaryCta={{ label: 'Nezávazná poptávka', href: '/kontakt/' }}
+    secondaryCta={{ label: 'Portfolio', href: '/portfolio/' }}
   />
+
+  <!-- 2. Krátký souhrn (SEO / AI search 50–80 slov) a fakta důvěry -->
+  <section class="section">
+    <div class="container home-intro">
+      <div class="home-intro__summary">
+        <span class="eyebrow">Přehled</span>
+        <h2>[DOPLNIT: Nadpis souhrnu — kdo jsem a komu pomáhám]</h2>
+        <div class="home-placeholder-box">
+          <p>
+            [DOPLNIT: Souhrn na 50 až 80 slov, který přímo odpovídá na otázky: kdo
+            (Jakub Minka / Minka Creative), co (foto, video, dron), pro koho (firmy,
+            stavební firmy a developeři, realitky a architekti, obce, akce a maturitní
+            plesy), kde (Vlašim, Benešov, Středočeský kraj, Praha) a orientační cena
+            od.]
+          </p>
+        </div>
+      </div>
+
+      <dl class="home-trust" aria-label="Základní údaje a záruky">
+        {
+          trustFacts.map((fact) => (
+            <div class="home-trust__item">
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- 3. Hlavní služby (Foto, Video, Dron) + rozcestník segmentů -->
+  <section class="section section--surface">
+    <div class="container home-stack">
+      <SectionHeader
+        eyebrow="Služby"
+        heading="[DOPLNIT: Nadpis sekce služeb — foto, video a dron]"
+        lead="[DOPLNIT: Stručný popis hlavních pilířů a rozcestník podle typu zakázky.]"
+        actionLabel="Všechny služby"
+        actionHref="/sluzby/"
+      />
+
+      <div class="grid grid--3">
+        {
+          coreServices.map((service) => (
+            <ServiceCard
+              eyebrow={service.eyebrow}
+              title={service.title}
+              summary={service.summary}
+              href={service.href}
+              image={service.image}
+              imageAlt={service.imageAlt}
+              priceNote={service.priceNote}
+            />
+          ))
+        }
+      </div>
+
+      <div class="home-segments" data-reveal>
+        <p class="home-segments__label">Pro koho nejčastěji pracuji</p>
+        <ul class="home-segments__list">
+          {
+            segmentLinks.map((item) => (
+              <li>
+                <a class="home-segment-pill" href={item.href}>
+                  <span>{item.label}</span>
+                  <span aria-hidden="true">&rarr;</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Vybrané projekty z portfolia -->
+  <section class="section">
+    <div class="container home-stack">
+      <SectionHeader
+        eyebrow="Portfolio"
+        heading="[DOPLNIT: Vybrané realizace]"
+        lead="[DOPLNIT: Krátký úvod k vybraným zakázkám z reálných projektů.]"
+        actionLabel="Celé portfolio"
+        actionHref="/portfolio/"
+      />
+
+      <div class="grid grid--2">
+        {
+          featuredProjects.map((project) => (
+            <ProjectCard
+              title={project.title}
+              href={project.href}
+              summary={project.summary}
+              image={project.image}
+              imageAlt={project.imageAlt}
+              year={project.year}
+              location={project.location}
+              services={project.services}
+              client={project.client}
+              showClientName={project.showClientName}
+              relationship={project.relationship}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Sekce přes celou šířku obrazovky -->
+  <FullBleedSection
+    eyebrow="[DOPLNIT: Štítek celošířkové sekce]"
+    heading="[DOPLNIT: Silný vizuální předěl — např. letecké záběry nebo stavby]"
+    summary="[DOPLNIT: Jedna až dvě věty přes fotografii s odkazem na konkrétní službu nebo poptávku.]"
+    image={fullBleedImg}
+    imageAlt="[DOPLNIT: Popis celošířkového snímku]"
+    ctaLabel="Zjistit více"
+    ctaHref="/sluzby/dron/"
+    height="md"
+  />
+
+  <!-- 6. Video blok (načítá se až po kliknutí) -->
+  <section class="section section--surface">
+    <div class="container container--narrow home-stack">
+      <SectionHeader
+        eyebrow="Video ukázka"
+        heading="[DOPLNIT: Showreel nebo ukázkové video z produkce]"
+        lead="[DOPLNIT: Krátký popis videa — externí přehrávač se načte až po kliknutí.]"
+      />
+
+      <VideoBlock
+        title="[DOPLNIT: Název ukázkového videa]"
+        poster={heroPoster}
+        posterAlt="[DOPLNIT: Náhledový snímek ukázkového videa]"
+        duration="[DOPLNIT: 01:30]"
+        caption="[DOPLNIT: Krátký popisek pod videem]"
+      />
+    </div>
+  </section>
+
+  <!-- 7. Ukázka fotografií (Masonry + Lightbox) -->
+  <section class="section">
+    <div class="container home-stack">
+      <SectionHeader
+        eyebrow="Výběr snímků"
+        heading="[DOPLNIT: Ukázka z posledních zakázek]"
+        lead="Kliknutím na libovolnou fotografii otevřeš náhled přes celou obrazovku."
+      />
+
+      <MasonryGallery items={showcaseGallery} galleryId="titulka-vyber" />
+    </div>
+  </section>
+
+  <!-- 8. Reference a schválená loga klientů -->
+  <section class="section section--surface">
+    <div class="container home-stack">
+      <SectionHeader
+        eyebrow="Reference"
+        heading="[DOPLNIT: Co říkají klienti]"
+        lead="[DOPLNIT: Pouze ověřené a schválené reference ze skutečných zakázek.]"
+        actionLabel="Všechny reference"
+        actionHref="/reference/"
+      />
+
+      <div class="grid grid--2">
+        <TestimonialCard
+          quote="[DOPLNIT: Zástupný text reference 1 — bude nahrazen skutečnou citací klienta.]"
+          author="[DOPLNIT: Jméno a příjmení]"
+          company="[DOPLNIT: Firma / obec / škola]"
+          projectLabel="Zobrazit projekt"
+          projectHref="/portfolio/ukazka-projektu/"
+        />
+        <TestimonialCard
+          quote="[DOPLNIT: Zástupný text reference 2 — bude nahrazen skutečnou citací klienta.]"
+          author="[DOPLNIT: Jméno a příjmení]"
+          company="[DOPLNIT: Firma / obec / škola]"
+        />
+      </div>
+
+      <ClientLogoStrip logos={placeholderLogos} />
+    </div>
+  </section>
+
+  <!-- 9. Závěrečný blok Kontakt a Poptávka -->
+  <ContactCtaBand />
+
+  <Lightbox />
 </BaseLayout>
+
+<style>
+  .home-stack {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .home-intro {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 64rem) {
+    .home-intro {
+      grid-template-columns: 1.25fr 1fr;
+      align-items: start;
+      gap: var(--space-12);
+    }
+  }
+
+  .home-intro__summary {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .home-placeholder-box {
+    padding: var(--space-5);
+    background-color: var(--color-placeholder-bg);
+    border: var(--border-thin) dashed var(--color-placeholder-border);
+    border-radius: var(--radius-md);
+    color: var(--color-placeholder-text);
+  }
+
+  .home-trust {
+    margin: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .home-trust__item {
+    padding: var(--space-4) var(--space-5);
+    background-color: var(--color-surface);
+    border: var(--border-thin) solid var(--color-border);
+    border-radius: var(--radius-md);
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .home-trust__item dt {
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-accent-ink);
+  }
+
+  .home-trust__item dd {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+
+  .home-segments {
+    padding-top: var(--space-4);
+    border-top: var(--border-thin) solid var(--color-border);
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .home-segments__label {
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .home-segments__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .home-segment-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--touch-target-min);
+    padding: var(--space-2) var(--space-4);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    border: var(--border-thin) solid var(--color-border);
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    transition:
+      border-color var(--transition-fast),
+      color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .home-segment-pill:hover {
+    color: var(--color-accent-ink);
+    border-color: var(--color-accent);
+    background-color: var(--color-accent-soft);
+  }
+</style>

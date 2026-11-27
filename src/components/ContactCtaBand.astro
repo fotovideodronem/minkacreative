@@ -1,0 +1,146 @@
+---
+import Button from './Button.astro';
+import { isPlaceholderValue, siteConfig } from '../config/site';
+
+/**
+ * Závěrečný blok Kontakt a Poptávka na konci každé stránky (sekce 6.10 zadání).
+ * Využívá centrální údaje ze siteConfig a vede návštěvníka k poptávce nebo zavolání.
+ */
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  summary?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+const {
+  eyebrow = 'Nezávazná poptávka',
+  heading = '[DOPLNIT: Výzva k akci — např. Máte projekt v plánu?]',
+  summary = '[DOPLNIT: Krátká věta o tom, co stačí napsat do poptávky a do kdy se ozveš.]',
+  ctaLabel = 'Poslat poptávku',
+  ctaHref = siteConfig.navigation.cta.href,
+} = Astro.props;
+
+const emailIsPlaceholder = isPlaceholderValue(siteConfig.contact.email);
+---
+
+<section class="section" aria-label="Kontakt a poptávka">
+  <div class="container">
+    <div class="cta-band" data-reveal>
+      <div class="cta-band__copy">
+        <span class="eyebrow">{eyebrow}</span>
+        <h2 class="cta-band__title">{heading}</h2>
+        <p class="lead cta-band__summary">{summary}</p>
+        <div class="cta-band__actions">
+          <Button href={ctaHref} variant="primary" size="lg">
+            {ctaLabel}
+          </Button>
+          <Button href={siteConfig.contact.phoneHref} variant="secondary" size="lg">
+            Zavolat {siteConfig.contact.phoneDisplay}
+          </Button>
+        </div>
+      </div>
+
+      <dl class="cta-band__details">
+        <div class="cta-band__detail">
+          <dt>Telefon</dt>
+          <dd>
+            <a href={siteConfig.contact.phoneHref}>{siteConfig.contact.phoneDisplay}</a>
+          </dd>
+        </div>
+        <div class="cta-band__detail">
+          <dt>E-mail</dt>
+          <dd>
+            {
+              emailIsPlaceholder ? (
+                <span class="placeholder-badge">{siteConfig.contact.email}</span>
+              ) : (
+                <a href={`mailto:${siteConfig.contact.email}`}>{siteConfig.contact.email}</a>
+              )
+            }
+          </dd>
+        </div>
+        <div class="cta-band__detail">
+          <dt>Oblast působení</dt>
+          <dd>{siteConfig.contact.serviceArea}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    padding: var(--space-8);
+    background-color: var(--color-surface);
+    border: var(--border-thin) solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 64rem) {
+    .cta-band {
+      padding: var(--space-12);
+      grid-template-columns: 1.4fr 1fr;
+      align-items: center;
+      gap: var(--space-12);
+    }
+  }
+
+  .cta-band__copy {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .cta-band__title {
+    font-size: var(--text-3xl);
+    text-wrap: balance;
+  }
+
+  .cta-band__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  .cta-band__details {
+    margin: 0;
+    padding: var(--space-6);
+    background-color: var(--color-bg);
+    border: var(--border-thin) solid var(--color-border);
+    border-radius: var(--radius-md);
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .cta-band__detail {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .cta-band__detail dt {
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .cta-band__detail dd {
+    margin: 0;
+    font-size: var(--text-base);
+    font-weight: var(--font-medium);
+    color: var(--color-text);
+  }
+
+  .cta-band__detail a {
+    text-decoration: none;
+  }
+
+  .cta-band__detail a:hover {
+    color: var(--color-accent-ink);
+  }
+</style>

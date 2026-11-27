@@ -1,0 +1,385 @@
+---
+import { Picture, getImage } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from './Button.astro';
+import SectionHeader from './SectionHeader.astro';
+import MasonryGallery from './MasonryGallery.astro';
+import VideoBlock from './VideoBlock.astro';
+import ProcessSteps from './ProcessSteps.astro';
+import ProjectCard from './ProjectCard.astro';
+import FaqAccordion from './FaqAccordion.astro';
+import ContactCtaBand from './ContactCtaBand.astro';
+import Lightbox from './Lightbox.astro';
+import { siteConfig } from '../config/site';
+import type { ServicePageData } from '../types/service';
+
+/**
+ * Znovupoužitelná šablona stránky služby nebo segmentu (Fáze 4 zadání).
+ * Odvozují se z ní podstránky služeb (/sluzby/*) i oborové stránky.
+ */
+interface Props {
+  data: ServicePageData;
+  galleryId: string;
+}
+
+const { data, galleryId } = Astro.props;
+
+const preloadedHero = await getImage({
+  src: data.heroImage,
+  width: 1200,
+  format: 'webp',
+});
+---
+
+<BaseLayout title={data.seoTitle} description={data.seoDescription}>
+  <link slot="head" rel="preload" as="image" href={preloadedHero.src} />
+
+  <!-- 1. Úvod služby: drobečková navigace, H1, přímý souhrn (50–80 slov) a hlavní snímek -->
+  <section class="service-hero">
+    <div class="container service-hero__stack">
+      <nav class="breadcrumbs" aria-label="Drobečková navigace">
+        <ol>
+          <li><a href="/">Domů</a></li>
+          <li><a href="/sluzby/">Služby</a></li>
+          <li aria-current="page">{data.title}</li>
+        </ol>
+      </nav>
+
+      <div class="service-hero__grid">
+        <div class="service-hero__copy">
+          <span class="eyebrow">{data.eyebrow}</span>
+          <h1>{data.title}</h1>
+          <p class="lead">{data.summaryLead}</p>
+          <div class="service-hero__summary-box">
+            <p>{data.summaryBody}</p>
+          </div>
+
+          <div class="service-hero__actions">
+            <Button href={siteConfig.navigation.cta.href} variant="primary" size="lg">
+              Nezávazná poptávka
+            </Button>
+            <Button href={siteConfig.contact.phoneHref} variant="secondary" size="lg">
+              Zavolat {siteConfig.contact.phoneDisplay}
+            </Button>
+          </div>
+        </div>
+
+        <div class="service-hero__media">
+          <Picture
+            src={data.heroImage}
+            alt={data.heroImageAlt}
+            formats={['avif', 'webp']}
+            widths={[480, 768, 1200]}
+            sizes="(min-width: 64rem) 46vw, 94vw"
+            loading="eager"
+            decoding="sync"
+            fetchpriority="high"
+            class="service-hero__img"
+          />
+        </div>
+      </div>
+
+      <!-- 2. Rychlé parametry: cena od, dodání, formáty, oblast -->
+      <dl class="service-specs" aria-label="Základní parametry služby">
+        {
+          data.specs.map((spec) => (
+            <div class="service-spec">
+              <dt>{spec.label}</dt>
+              <dd class:list={[{ 'is-placeholder': spec.isPlaceholder }]}>{spec.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- 3. Přínosy a co je součástí -->
+  <section class="section section--surface">
+    <div class="container service-stack">
+      <SectionHeader
+        eyebrow="Co je součástí"
+        heading={data.benefitsHeading}
+        lead={data.benefitsLead}
+      />
+
+      <div class="grid grid--2">
+        {
+          data.benefits.map((benefit) => (
+            <article class="benefit-card" data-reveal>
+              <h3 class="benefit-card__title">{benefit.title}</h3>
+              <p class="benefit-card__desc">{benefit.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Obrazové ukázky (galerie + volitelné video) -->
+  <section class="section">
+    <div class="container service-stack">
+      <SectionHeader
+        eyebrow="Ukázky práce"
+        heading={data.galleryHeading}
+        lead={data.galleryLead}
+      />
+
+      <MasonryGallery items={data.gallery} galleryId={galleryId} />
+
+      {
+        data.video && (
+          <div class="service-video">
+            <VideoBlock
+              title={data.video.title}
+              poster={data.video.poster}
+              posterAlt={data.video.posterAlt}
+              videoUrl={data.video.videoUrl}
+              duration={data.video.duration}
+              caption={data.video.caption}
+            />
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- 5. Jak spolupráce probíhá -->
+  <section class="section section--surface">
+    <div class="container service-stack">
+      <SectionHeader
+        eyebrow="Postup"
+        heading={data.processHeading ?? 'Jak spolupráce probíhá'}
+        lead={data.processLead}
+      />
+
+      <ProcessSteps steps={data.processSteps} />
+    </div>
+  </section>
+
+  <!-- 6. Související projekty -->
+  {
+    data.projects.length > 0 && (
+      <section class="section">
+        <div class="container service-stack">
+          <SectionHeader
+            eyebrow="Z portfolia"
+            heading={data.projectsHeading ?? 'Související realizace'}
+            lead={data.projectsLead}
+            actionLabel="Celé portfolio"
+            actionHref="/portfolio/"
+          />
+
+          <div class="grid grid--2">
+            {data.projects.map((project) => (
+              <ProjectCard
+                title={project.title}
+                href={project.href}
+                summary={project.summary}
+                image={project.image}
+                imageAlt={project.imageAlt}
+                year={project.year}
+                location={project.location}
+                services={project.services}
+                client={project.client}
+                showClientName={project.showClientName}
+                relationship={project.relationship}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- 7. Časté otázky (FAQ) -->
+  {
+    data.faq.length > 0 && (
+      <section class="section section--surface">
+        <div class="container container--narrow service-stack">
+          <SectionHeader
+            eyebrow="FAQ"
+            heading={data.faqHeading ?? 'Časté otázky ke službě'}
+            lead={data.faqLead}
+          />
+
+          <FaqAccordion items={data.faq} openFirst={true} />
+        </div>
+      </section>
+    )
+  }
+
+  <!-- 8. Závěrečný blok Kontakt a Poptávka -->
+  <ContactCtaBand heading={data.ctaHeading} summary={data.ctaSummary} />
+
+  <Lightbox />
+</BaseLayout>
+
+<style>
+  .service-hero {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  @media (min-width: 48rem) {
+    .service-hero {
+      padding-block: var(--space-10) var(--space-16);
+    }
+  }
+
+  .service-hero__stack,
+  .service-stack {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .breadcrumbs ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .breadcrumbs li + li::before {
+    content: '/';
+    margin-right: var(--space-2);
+    color: var(--color-border-strong);
+  }
+
+  .breadcrumbs a {
+    text-decoration: none;
+  }
+
+  .breadcrumbs a:hover {
+    color: var(--color-accent-ink);
+  }
+
+  .breadcrumbs [aria-current='page'] {
+    color: var(--color-text);
+    font-weight: var(--font-medium);
+  }
+
+  .service-hero__grid {
+    display: grid;
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  @media (min-width: 64rem) {
+    .service-hero__grid {
+      grid-template-columns: 1.05fr 1fr;
+      gap: var(--space-12);
+    }
+  }
+
+  .service-hero__copy {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .service-hero__summary-box {
+    padding: var(--space-4) var(--space-5);
+    background-color: var(--color-placeholder-bg);
+    border: var(--border-thin) dashed var(--color-placeholder-border);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    color: var(--color-placeholder-text);
+  }
+
+  .service-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  .service-hero__media {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: var(--border-thin) solid var(--color-border);
+    background-color: var(--color-surface);
+  }
+
+  .service-hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .service-specs {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 48rem) {
+    .service-specs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .service-specs {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .service-spec {
+    padding: var(--space-4) var(--space-5);
+    background-color: var(--color-surface);
+    border: var(--border-thin) solid var(--color-border);
+    border-radius: var(--radius-md);
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .service-spec dt {
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-accent-ink);
+  }
+
+  .service-spec dd {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-text);
+  }
+
+  .service-spec dd.is-placeholder {
+    color: var(--color-placeholder-text);
+  }
+
+  .benefit-card {
+    padding: var(--space-6);
+    background-color: var(--color-bg);
+    border: var(--border-thin) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+  }
+
+  .benefit-card__title {
+    font-size: var(--text-lg);
+    color: var(--color-text);
+  }
+
+  .benefit-card__desc {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+  }
+
+  .service-video {
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+    width: 100%;
+  }
+</style>

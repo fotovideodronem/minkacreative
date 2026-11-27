@@ -1,14 +1,171 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PlaceholderPage from '../../components/PlaceholderPage.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import ContactCtaBand from '../../components/ContactCtaBand.astro';
+
+const allProjects = await getCollection('projects');
+
+// Seřadit: featured první, pak podle order asc
+const projects = allProjects.sort((a, b) => {
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  return (a.data.order ?? 99) - (b.data.order ?? 99);
+});
+
+const categoryLabels: Record<string, string> = {
+  vse: 'Vše',
+  firmy: 'Firemní foto & video',
+  stavby: 'Stavby & průmysl',
+  architektura: 'Architektura & interiéry',
+  'obce-turismus': 'Obce & turismus',
+  eventy: 'Eventy',
+  plesy: 'Maturitní plesy',
+};
+
+const categories = Object.keys(categoryLabels);
 ---
 
 <BaseLayout
   title="Portfolio | Minka Creative"
-  description="[DOPLNIT: přehled vybraných projektů]"
+  description="[DOPLNIT: Popis portfolia — přehled realizovaných projektů v oblasti firemní fotografie, videa, dronu a architektury.]"
 >
-  <PlaceholderPage
-    heading="Portfolio"
-    routeNote="Trasa: /portfolio/ · Přehled projektů s filtrem podle kategorie (Fáze 5)."
-  />
+  <section class="section" style="padding-top: var(--space-20);">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Portfolio"
+        heading="Realizované projekty"
+        lead="[DOPLNIT: Krátká věta o šíři portfolia — typy zakázek, lokality, přístup.]"
+      />
+
+      {/* Filtrační tlačítka */}
+      <div class="portfolio-filter" role="group" aria-label="Filtr kategorie">
+        {categories.map((cat) => (
+          <button
+            class={`filter-btn${cat === 'vse' ? ' filter-btn--active' : ''}`}
+            data-filter={cat}
+            type="button"
+            aria-pressed={cat === 'vse' ? 'true' : 'false'}
+          >
+            {categoryLabels[cat]}
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="grid grid--2" id="portfolio-grid">
+        {projects.map((entry) => (
+          <div
+            class="portfolio-item"
+            data-categories={entry.data.categories.join(',')}
+          >
+            <ProjectCard
+              title={entry.data.title}
+              summary={entry.data.summary}
+              image={entry.data.cover}
+              imageAlt={entry.data.coverAlt}
+              href={`/portfolio/${entry.id}/`}
+              showClientName={entry.data.showClientName}
+              relationship={entry.data.relationship}
+              client={entry.data.client}
+              year={entry.data.year}
+              location={entry.data.location}
+              services={entry.data.services}
+              featured={entry.data.featured}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Zpráva při prázdném výsledku filtru */}
+      <p class="portfolio-empty" id="portfolio-empty" hidden>
+        V této kategorii zatím nejsou žádné projekty.
+      </p>
+    </div>
+  </section>
+
+  <ContactCtaBand />
 </BaseLayout>
+
+<style>
+  /* ---- Filtr ---- */
+  .portfolio-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block: var(--space-10) var(--space-12);
+  }
+
+  .filter-btn {
+    padding: 0.45rem 1.1rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+    min-height: 44px;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--color-accent-ink);
+    color: var(--color-accent-ink);
+  }
+
+  .filter-btn--active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-accent-text);
+    font-weight: 600;
+  }
+
+  /* ---- Grid ---- */
+  .portfolio-item {
+    transition: opacity 0.25s, transform 0.25s;
+  }
+
+  .portfolio-item[hidden] {
+    display: none;
+  }
+
+  .portfolio-empty {
+    text-align: center;
+    padding: var(--space-16) 0;
+    color: var(--color-text-muted);
+  }
+</style>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const items = document.querySelectorAll<HTMLElement>('.portfolio-item');
+  const emptyMsg = document.getElementById('portfolio-empty') as HTMLParagraphElement | null;
+
+  function applyFilter(cat: string) {
+    let visible = 0;
+    items.forEach((item) => {
+      const cats = (item.dataset.categories ?? '').split(',');
+      const show = cat === 'vse' || cats.includes(cat);
+      item.hidden = !show;
+      if (show) visible++;
+    });
+    if (emptyMsg) emptyMsg.hidden = visible > 0;
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      buttons.forEach((b) => {
+        b.classList.remove('filter-btn--active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('filter-btn--active');
+      btn.setAttribute('aria-pressed', 'true');
+      applyFilter(btn.dataset.filter ?? 'vse');
+    });
+  });
+</script>

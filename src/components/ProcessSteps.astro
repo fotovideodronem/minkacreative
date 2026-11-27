@@ -1,0 +1,91 @@
+---
+import type { ServiceProcessStep } from '../types/service';
+
+/**
+ * Sekce „Jak spolupráce probíhá“ (3 až 5 očíslovaných kroků podle sekce 7 zadání).
+ */
+interface Props {
+  steps: ServiceProcessStep[];
+}
+
+const { steps } = Astro.props;
+---
+
+<ol class="process-steps" data-reveal>
+  {
+    steps.map((step, index) => (
+      <li class="process-step">
+        <span class="process-step__number" aria-hidden="true">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <div class="process-step__body">
+          <h3 class="process-step__title">{step.title}</h3>
+          <p class="process-step__desc">{step.description}</p>
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .process-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 48rem) {
+    .process-steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .process-steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .process-step {
+    padding: var(--space-6);
+    background-color: var(--color-surface);
+    border: var(--border-thin) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    display: grid;
+    align-content: start;
+    gap: var(--space-4);
+  }
+
+  .process-step__number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-10);
+    height: var(--space-10);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    color: var(--color-accent-ink);
+    background-color: var(--color-accent-soft);
+    border: var(--border-thin) solid var(--color-accent);
+    border-radius: var(--radius-pill);
+  }
+
+  .process-step__body {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .process-step__title {
+    font-size: var(--text-lg);
+    color: var(--color-text);
+  }
+
+  .process-step__desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+</style>

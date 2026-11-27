@@ -71,6 +71,17 @@
   /* Přechody */
   --transition-fast: 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
   --transition-base: 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-slow: 480ms cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Texty a překryvy přes fotografie a videa (vždy vysoký kontrast) */
+  --color-media-text: #f7f5f0;
+  --color-media-text-muted: rgba(247, 245, 240, 0.84);
+  --color-media-surface: rgba(13, 14, 17, 0.68);
+  --color-media-border: rgba(247, 245, 240, 0.28);
+  --color-scrim-strong: rgba(10, 11, 14, 0.78);
+  --color-scrim-mid: rgba(10, 11, 14, 0.44);
+  --color-scrim-soft: rgba(10, 11, 14, 0.18);
+  --color-overlay-backdrop: rgba(8, 9, 12, 0.94);
 
   /* Z-index vrstvy */
   --z-base: 1;
@@ -78,6 +89,7 @@
   --z-header: 50;
   --z-dropdown: 60;
   --z-drawer: 70;
+  --z-modal: 90;
 }
 
 @media (min-width: 48rem) {
@@ -102,16 +114,17 @@
   --color-border: rgba(244, 243, 239, 0.12);
   --color-border-strong: rgba(244, 243, 239, 0.26);
 
-  /* Jantarový akcent – snadná změna na jednom místě */
-  --color-accent: #e5a135;
-  --color-accent-hover: #f2b44d;
-  --color-accent-text: #0d0e11;
-  --color-accent-soft: rgba(229, 161, 53, 0.14);
+  /* Modrý akcent – klidnější tmavší modrá pro tlačítka + čitelnější ink pro text */
+  --color-accent: #2b64ad;
+  --color-accent-hover: #3674c4;
+  --color-accent-ink: #72aaf2;
+  --color-accent-text: #f7f9fc;
+  --color-accent-soft: rgba(43, 100, 173, 0.2);
 
   /* Zvýraznění zástupného obsahu ve vývojové fázi */
-  --color-placeholder-bg: rgba(229, 161, 53, 0.08);
-  --color-placeholder-border: rgba(229, 161, 53, 0.35);
-  --color-placeholder-text: #f4c978;
+  --color-placeholder-bg: rgba(114, 170, 242, 0.09);
+  --color-placeholder-border: rgba(114, 170, 242, 0.36);
+  --color-placeholder-text: #a8ccf7;
 
   /* Stíny */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
@@ -119,7 +132,7 @@
 }
 
 /* ==========================================================================
-   Varianta B: Světlý redakční základ + jantarový akcent
+   Varianta B: Světlý redakční základ + modrý akcent
    ========================================================================== */
 [data-theme='light'] {
   color-scheme: light;
@@ -133,16 +146,17 @@
   --color-border: rgba(20, 21, 24, 0.12);
   --color-border-strong: rgba(20, 21, 24, 0.26);
 
-  /* Jantarový akcent přizpůsobený pro vysoký kontrast na světlém pozadí */
-  --color-accent: #b86b11;
-  --color-accent-hover: #99580c;
+  /* Modrý akcent přizpůsobený pro vysoký kontrast na světlém pozadí */
+  --color-accent: #1f5396;
+  --color-accent-hover: #174078;
+  --color-accent-ink: #1f5396;
   --color-accent-text: #ffffff;
-  --color-accent-soft: rgba(184, 107, 17, 0.11);
+  --color-accent-soft: rgba(31, 83, 150, 0.11);
 
   /* Zvýraznění zástupného obsahu ve vývojové fázi */
-  --color-placeholder-bg: rgba(184, 107, 17, 0.08);
-  --color-placeholder-border: rgba(184, 107, 17, 0.38);
-  --color-placeholder-text: #854b07;
+  --color-placeholder-bg: rgba(31, 83, 150, 0.08);
+  --color-placeholder-border: rgba(31, 83, 150, 0.34);
+  --color-placeholder-text: #174078;
 
   /* Stíny */
   --shadow-sm: 0 2px 8px rgba(20, 21, 24, 0.06);

@@ -1,0 +1,136 @@
+---
+/**
+ * Znovupoužitelné tlačítko / odkaz design systému Minka Creative.
+ * Podporuje varianty pro běžné pozadí i pro překryvy přes fotografie a video.
+ */
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'media-secondary';
+  size?: 'md' | 'lg';
+  external?: boolean;
+  class?: string;
+  ariaLabel?: string;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'primary',
+  size = 'md',
+  external = false,
+  class: className = '',
+  ariaLabel,
+} = Astro.props;
+
+const classes = ['btn', `btn--${variant}`, `btn--${size}`, className];
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class:list={classes}
+      aria-label={ariaLabel}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
+    >
+      <slot />
+      {external && <span aria-hidden="true">&nearr;</span>}
+    </a>
+  ) : (
+    <button type={type} class:list={classes} aria-label={ariaLabel}>
+      <slot />
+    </button>
+  )
+}
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: var(--touch-target-min);
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
+    line-height: 1;
+    border-radius: var(--radius-pill);
+    border: var(--border-thin) solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .btn--md {
+    padding: var(--space-3) var(--space-5);
+    font-size: var(--text-sm);
+  }
+
+  .btn--lg {
+    min-height: var(--space-12);
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--text-base);
+  }
+
+  /* Primární akcentové tlačítko */
+  .btn--primary {
+    color: var(--color-accent-text);
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .btn--primary:hover {
+    background-color: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+  }
+
+  /* Sekundární obrysové tlačítko */
+  .btn--secondary {
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border-color: var(--color-border-strong);
+  }
+
+  .btn--secondary:hover {
+    background-color: var(--color-surface-elevated);
+    border-color: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+
+  /* Lehké textové tlačítko */
+  .btn--ghost {
+    color: var(--color-text);
+    background-color: transparent;
+    border-color: transparent;
+    padding-inline: var(--space-3);
+  }
+
+  .btn--ghost:hover {
+    color: var(--color-accent-ink);
+    background-color: var(--color-accent-soft);
+  }
+
+  /* Sekundární tlačítko přes tmavou fotku nebo video */
+  .btn--media-secondary {
+    color: var(--color-media-text);
+    background-color: var(--color-media-surface);
+    border-color: var(--color-media-border);
+    backdrop-filter: blur(var(--space-2));
+  }
+
+  .btn--media-secondary:hover {
+    color: var(--color-media-text);
+    border-color: var(--color-media-text);
+    background-color: var(--color-scrim-strong);
+  }
+</style>

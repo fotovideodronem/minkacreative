@@ -1,0 +1,90 @@
+---
+import Button from './Button.astro';
+
+/**
+ * Záhlaví obsahové sekce s nadpisem, volitelným štítkem, perexem a odkazem.
+ */
+interface Props {
+  eyebrow?: string;
+  heading: string;
+  lead?: string;
+  align?: 'left' | 'center';
+  actionLabel?: string;
+  actionHref?: string;
+  headingLevel?: 'h1' | 'h2';
+}
+
+const {
+  eyebrow,
+  heading,
+  lead,
+  align = 'left',
+  actionLabel,
+  actionHref,
+  headingLevel = 'h2',
+} = Astro.props;
+
+const HeadingTag = headingLevel;
+---
+
+<div class:list={['section-header', `section-header--${align}`]} data-reveal>
+  <div class="section-header__copy">
+    {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+    <HeadingTag class="section-header__title">{heading}</HeadingTag>
+    {lead && <p class="lead section-header__lead">{lead}</p>}
+  </div>
+
+  {
+    actionLabel && actionHref && (
+      <div class="section-header__action">
+        <Button href={actionHref} variant="secondary">
+          {actionLabel}
+        </Button>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    margin-bottom: var(--space-8);
+  }
+
+  @media (min-width: 48rem) {
+    .section-header--left {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .section-header {
+      margin-bottom: var(--space-10);
+    }
+  }
+
+  .section-header--center {
+    text-align: center;
+    align-items: center;
+  }
+
+  .section-header__copy {
+    display: grid;
+    gap: var(--space-3);
+    max-width: var(--container-narrow);
+  }
+
+  .section-header--center .section-header__copy {
+    justify-items: center;
+  }
+
+  .section-header__title {
+    font-size: var(--text-3xl);
+  }
+
+  .section-header__action {
+    flex-shrink: 0;
+  }
+</style>

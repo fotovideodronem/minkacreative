@@ -1,14 +1,205 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PlaceholderPage from '../components/PlaceholderPage.astro';
+import ServiceTemplate from '../components/ServiceTemplate.astro';
+import { siteConfig } from '../config/site';
+import type { ServicePageData } from '../types/service';
+
+import heroPoster from '../assets/placeholders/hero-16x9.png';
+import fullBleedImg from '../assets/placeholders/fullbleed-21x9.png';
+import landscapeImg from '../assets/placeholders/landscape-4x3.png';
+import portraitImg from '../assets/placeholders/portrait-3x4.png';
+import tallImg from '../assets/placeholders/tall-4x5.png';
+import squareImg from '../assets/placeholders/square-1x1.png';
+
+/**
+ * Vzorová stránka služby/segmentu postavená nad ServiceTemplate (Fáze 4).
+ * Všechny konkrétní texty, ceny a snímky jsou označené jako zástupné.
+ */
+const serviceData: ServicePageData = {
+  seoTitle: 'Stavební fotoreporty a dokumentace staveb | Minka Creative',
+  seoDescription:
+    '[DOPLNIT: Popis služby stavební fotoreporty pro stavební firmy a developery — Vlašim, Benešov, Středočeský kraj, Praha.]',
+  eyebrow: 'Stavby a developeři · Foto · Dron · Video',
+  title: 'Stavební fotoreporty',
+  summaryLead:
+    '[DOPLNIT: Stručná úvodní věta — dokumentace postupu staveb ze země i z dronu pro stavební firmy a developery.]',
+  summaryBody:
+    '[DOPLNIT: Souhrn na 50 až 80 slov (SEO / AI search): kdo dokumentuje, co přesně je výstupem (pravidelné fotoreporty, letecké pohledy, časosběr / video), pro koho je služba určena, kde probíhá (Vlašim, Benešov, Středočeský kraj, Praha) a jaká je orientační cena od.]',
+  heroImage: landscapeImg,
+  heroImageAlt: '[DOPLNIT: Zástupný hlavní snímek ze stavby nebo letecký pohled na staveniště]',
+  specs: [
+    {
+      label: 'Orientační cena',
+      value: '[DOPLNIT: Od ... Kč / výjezd nebo měsíční balíček]',
+      isPlaceholder: true,
+    },
+    {
+      label: 'Čas dodání',
+      value: '[DOPLNIT: Např. do ... pracovních dnů]',
+      isPlaceholder: true,
+    },
+    {
+      label: 'Výstupy a formáty',
+      value: '[DOPLNIT: Počet upravených fotek, formát, rozlišení]',
+      isPlaceholder: true,
+    },
+    {
+      label: 'Působnost a cestovné',
+      value: `${siteConfig.contact.serviceArea} · [DOPLNIT: podmínky cestovného]`,
+      isPlaceholder: true,
+    },
+  ],
+  benefitsHeading: '[DOPLNIT: Co stavební fotoreporty přinášejí]',
+  benefitsLead:
+    '[DOPLNIT: Krátký úvod — 4 konkrétní přínosy pro stavbyvedoucí, investory a marketing.]',
+  benefits: [
+    {
+      title: '[DOPLNIT: Přínos 1 — např. Pravidelné kontrolní snímky ze stejných úhlů]',
+      description:
+        '[DOPLNIT: 1 až 2 věty o tom, jak report pomáhá při kontrolních dnech a pro investory.]',
+    },
+    {
+      title: '[DOPLNIT: Přínos 2 — např. Letecké záběry dronem s licencí]',
+      description:
+        '[DOPLNIT: 1 až 2 věty — přehled celé parcely, návaznost na okolí, oprávnění a pojištění.]',
+    },
+    {
+      title: '[DOPLNIT: Přínos 3 — např. Podklady pro web, prodej a reference]',
+      description:
+        '[DOPLNIT: 1 až 2 věty — reprezentativní fotky pro obchodní oddělení a další zakázky.]',
+    },
+    {
+      title: '[DOPLNIT: Přínos 4 — např. Závěrečné předání stavby]',
+      description:
+        '[DOPLNIT: 1 až 2 věty — finální sada fotografií a videa po dokončení projektu.]',
+    },
+  ],
+  galleryHeading: '[DOPLNIT: Ukázka ze stavebních zakázek]',
+  galleryLead:
+    'Fotografie zachovávají svůj poměr stran; po kliknutí se otevřou v prohlížeči přes celou obrazovku.',
+  gallery: [
+    {
+      image: landscapeImg,
+      alt: '[DOPLNIT: Zástupný snímek stavby 1 — fáze hrubé stavby]',
+      caption: '[DOPLNIT: Popisek — lokalita a fáze stavby]',
+    },
+    {
+      image: portraitImg,
+      alt: '[DOPLNIT: Zástupný snímek stavby 2 — detail konstrukce]',
+      caption: '[DOPLNIT: Popisek — detail prací]',
+    },
+    {
+      image: fullBleedImg,
+      alt: '[DOPLNIT: Zástupný snímek stavby 3 — pohled z dronu]',
+      caption: '[DOPLNIT: Popisek — letecký přehled]',
+    },
+    {
+      image: tallImg,
+      alt: '[DOPLNIT: Zástupný snímek stavby 4 — montáž nebo interiér]',
+      caption: '[DOPLNIT: Popisek — postup prací]',
+    },
+    {
+      image: squareImg,
+      alt: '[DOPLNIT: Zástupný snímek stavby 5 — technika na staveništi]',
+      caption: '[DOPLNIT: Popisek — srovnávací pohled]',
+    },
+    {
+      image: heroPoster,
+      alt: '[DOPLNIT: Zástupný snímek stavby 6 — dokončený objekt]',
+      caption: '[DOPLNIT: Popisek — předání stavby]',
+    },
+  ],
+  video: {
+    title: '[DOPLNIT: Ukázkové video z dokumentace stavby]',
+    poster: heroPoster,
+    posterAlt: '[DOPLNIT: Náhled videa ze stavby]',
+    duration: '[DOPLNIT: 01:15]',
+    caption:
+      '[DOPLNIT: Popisek videa — např. průlet dronem a souhrn průběhu stavby.]',
+  },
+  processHeading: 'Jak spolupráce probíhá',
+  processLead:
+    '[DOPLNIT: Krátký popis od první domluvy až po dlouhodobé reportování.]',
+  processSteps: [
+    {
+      title: '[DOPLNIT: Krok 1 — Zadání a harmonogram]',
+      description:
+        '[DOPLNIT: Krátký popis — domluva místa, termínů a klíčových fází stavby.]',
+    },
+    {
+      title: '[DOPLNIT: Krok 2 — Focení na místě]',
+      description:
+        '[DOPLNIT: Krátký popis — dodržení BOZP na staveništi, záběry ze země i z dronu.]',
+    },
+    {
+      title: '[DOPLNIT: Krok 3 — Výběr a úprava]',
+      description:
+        '[DOPLNIT: Krátký popis — barevné sladění, popisné názvy souborů podle data a fáze.]',
+    },
+    {
+      title: '[DOPLNIT: Krok 4 — Dodání podkladů]',
+      description:
+        '[DOPLNIT: Krátký popis — online galerie / archiv pro tým i marketing.]',
+    },
+  ],
+  projectsHeading: '[DOPLNIT: Vybrané stavební projekty]',
+  projectsLead:
+    '[DOPLNIT: Projekty se zobrazí podle pravidel souhlasu a vztahu ke klientovi.]',
+  projects: [
+    {
+      title: '[DOPLNIT: Ukázková stavba 1 — přímý klient]',
+      href: '/portfolio/ukazka-projektu/',
+      summary: '[DOPLNIT: Jedna až dvě věty o rozsahu dokumentace stavby.]',
+      image: landscapeImg,
+      imageAlt: '[DOPLNIT: Náhled stavebního projektu 1]',
+      year: 2026,
+      location: 'Vlašim',
+      services: ['Foto', 'Dron'],
+      client: '[DOPLNIT: Název stavební firmy]',
+      showClientName: true,
+      relationship: 'direct',
+    },
+    {
+      title: '[DOPLNIT: Ukázková stavba 2 — subdodávka]',
+      href: '/portfolio/ukazka-projektu/',
+      summary: '[DOPLNIT: Jedna až dvě věty — u subdodávky bez uvedení koncového klienta.]',
+      image: heroPoster,
+      imageAlt: '[DOPLNIT: Náhled stavebního projektu 2]',
+      year: 2026,
+      location: 'Středočeský kraj',
+      services: ['Foto', 'Video', 'Dron'],
+      client: 'Skrytý klient',
+      showClientName: false,
+      relationship: 'subcontract',
+    },
+  ],
+  faqHeading: 'Časté otázky ke stavebním fotoreportům',
+  faqLead: '[DOPLNIT: 4 až 8 konkrétních otázek a odpovědí pro klienty i AI vyhledávání.]',
+  faq: [
+    {
+      question: '[DOPLNIT: Otázka 1 — např. Jak často se stavba fotí?]',
+      answer:
+        '[DOPLNIT: Stručná a konkrétní odpověď — jednorázově i v pravidelných intervalech podle postupu prací.]',
+    },
+    {
+      question: '[DOPLNIT: Otázka 2 — např. Máte povolení a pojištění pro dron nad stavbou?]',
+      answer:
+        '[DOPLNIT: Konkrétní odpověď po ověření údajů o licenci a pojištění.]',
+    },
+    {
+      question: '[DOPLNIT: Otázka 3 — např. Za jak dlouho dodáte hotové fotky?]',
+      answer:
+        '[DOPLNIT: Konkrétní doba dodání v pracovních dnech a způsob předání.]',
+    },
+    {
+      question: '[DOPLNIT: Otázka 4 — např. Kolik stojí jeden výjezd nebo série reportů?]',
+      answer:
+        '[DOPLNIT: Orientační cena od, co je v ceně a jak se počítá cestovné.]',
+    },
+  ],
+  ctaHeading: '[DOPLNIT: Potřebujete dokumentovat stavbu?]',
+  ctaSummary:
+    '[DOPLNIT: Napište místo stavby a předpokládaný termín — ozvu se s návrhem postupu a ceny.]',
+};
 ---
 
-<BaseLayout
-  title="Stavební fotoreporty | Minka Creative"
-  description="[DOPLNIT: dokumentace staveb a developerů]"
->
-  <PlaceholderPage
-    heading="Stavební fotoreporty"
-    routeNote="Trasa: /stavebni-fotoreporty/ · Segment stavby a developeři."
-  />
-</BaseLayout>
+<ServiceTemplate data={serviceData} galleryId="stavebni-fotoreporty" />

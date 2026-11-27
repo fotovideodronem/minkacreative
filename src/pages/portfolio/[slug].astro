@@ -1,26 +1,345 @@
 ---
+import { getCollection, render } from 'astro:content';
+import { Picture } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PlaceholderPage from '../../components/PlaceholderPage.astro';
+import MasonryGallery from '../../components/MasonryGallery.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import VideoBlock from '../../components/VideoBlock.astro';
+import TestimonialCard from '../../components/TestimonialCard.astro';
+import ContactCtaBand from '../../components/ContactCtaBand.astro';
 
-export function getStaticPaths() {
-  return [
-    {
-      params: { slug: 'ukazka-projektu' },
-      props: { title: '[DOPLNIT: Název projektu]' },
-    },
-  ];
+export async function getStaticPaths() {
+  const entries = await getCollection('projects');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
 }
 
-const { slug } = Astro.params;
-const { title } = Astro.props;
+const { entry } = Astro.props;
+const { data } = entry;
+
+const { Content } = await render(entry);
+
+// Zobrazit jméno klienta jen pokud je to povoleno
+const showClient = data.showClientName && data.relationship === 'direct';
+
+// Štítky služeb
+const serviceLabels: Record<string, string> = {
+  foto: 'Fotografie',
+  video: 'Video',
+  dron: 'Dron',
+};
+
+const categoryLabels: Record<string, string> = {
+  firmy: 'Firemní foto & video',
+  stavby: 'Stavby & průmysl',
+  architektura: 'Architektura & interiéry',
+  'obce-turismus': 'Obce & turismus',
+  eventy: 'Eventy',
+  plesy: 'Maturitní plesy',
+};
+
+const pageTitle = data.seoTitle ?? `${data.title} | Portfolio | Minka Creative`;
+const pageDesc = data.seoDescription ?? data.summary;
+
+// Gallery items pro MasonryGallery + Lightbox
+const galleryItems = data.gallery.map((g) => ({
+  image: g.image,
+  alt: g.alt,
+  caption: g.caption,
+}));
 ---
 
-<BaseLayout
-  title={`${title} | Portfolio | Minka Creative`}
-  description="[DOPLNIT: detail projektu]"
->
-  <PlaceholderPage
-    heading={title}
-    routeNote={`Trasa: /portfolio/${slug}/ · Zástupná dynamická šablona detailu projektu (Fáze 5).`}
+<BaseLayout title={pageTitle} description={pageDesc}>
+  {/* Preload cover image (LCP) */}
+  <link
+    slot="head"
+    rel="preload"
+    as="image"
+    href={data.cover.src}
+    fetchpriority="high"
   />
+
+  {/* ---- Breadcrumbs ---- */}
+  <nav class="breadcrumbs" aria-label="Drobečková navigace">
+    <div class="container">
+      <ol class="breadcrumbs__list">
+        <li><a href="/">Domů</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li aria-current="page">{data.title}</li>
+      </ol>
+    </div>
+  </nav>
+
+  {/* ---- Hero ---- */}
+  <section class="project-hero section">
+    <div class="container">
+      <div class="project-hero__inner">
+        {/* Metadata a titulek */}
+        <div class="project-hero__meta-col">
+          {/* Kategorie jako eyebrow */}
+          <p class="eyebrow">
+            {data.categories.map((c) => categoryLabels[c] ?? c).join(' · ')}
+          </p>
+
+          <h1 class="project-hero__title">{data.title}</h1>
+
+          <p class="project-hero__summary">{data.summary}</p>
+
+          {/* Meta: klient, rok, lokalita */}
+          <dl class="project-hero__dl">
+            {showClient && data.client && (
+              <>
+                <dt>Klient</dt>
+                <dd>{data.client}</dd>
+              </>
+            )}
+            {data.year && (
+              <>
+                <dt>Rok</dt>
+                <dd>{data.year}</dd>
+              </>
+            )}
+            {data.location && (
+              <>
+                <dt>Lokalita</dt>
+                <dd>{data.location}{data.region ? `, ${data.region}` : ''}</dd>
+              </>
+            )}
+            {data.services.length > 0 && (
+              <>
+                <dt>Služby</dt>
+                <dd>
+                  <span class="service-badges">
+                    {data.services.map((s) => (
+                      <span class="badge">{serviceLabels[s] ?? s}</span>
+                    ))}
+                  </span>
+                </dd>
+              </>
+            )}
+          </dl>
+        </div>
+
+        {/* Cover obrázek */}
+        <div class="project-hero__img-col">
+          <Picture
+            src={data.cover}
+            alt={data.coverAlt}
+            formats={['avif', 'webp']}
+            widths={[640, 960, 1280]}
+            sizes="(max-width: 768px) 100vw, 60vw"
+            loading="eager"
+            fetchpriority="high"
+            class="project-hero__cover"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ---- Brief & výsledek ---- */}
+  {(data.brief || data.result) && (
+    <section class="section">
+      <div class="container">
+        <div class="grid grid--2 project-brief-grid">
+          {data.brief && (
+            <div class="project-brief-block">
+              <h2 class="project-block-heading">Zadání</h2>
+              <p>{data.brief}</p>
+            </div>
+          )}
+          {data.result && (
+            <div class="project-brief-block">
+              <h2 class="project-block-heading">Co vzniklo</h2>
+              <p>{data.result}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {/* ---- Galerie ---- */}
+  {galleryItems.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <MasonryGallery items={galleryItems} />
+        <Lightbox />
+      </div>
+    </section>
+  )}
+
+  {/* ---- Video ---- */}
+  {data.videoUrl && data.videoPoster && (
+    <section class="section">
+      <div class="container">
+        <VideoBlock
+          src={data.videoUrl}
+          poster={data.videoPoster}
+          posterAlt={data.videoPosterAlt ?? '[DOPLNIT: popis náhledu videa]'}
+          title={data.videoTitle ?? '[DOPLNIT: název videa]'}
+          duration={data.videoDuration}
+        />
+      </div>
+    </section>
+  )}
+
+  {/* ---- Tělo projektu (Markdown) ---- */}
+  <section class="section">
+    <div class="container">
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </section>
+
+  {/* ---- Reference ---- */}
+  {data.testimonial?.published && (
+    <section class="section">
+      <div class="container" style="max-width: 720px;">
+        <TestimonialCard
+          quote={data.testimonial.quote}
+          author={data.testimonial.author}
+          company={data.testimonial.company}
+          published={data.testimonial.published}
+        />
+      </div>
+    </section>
+  )}
+
+  {/* ---- JSON-LD (placeholder, plné SEO ve fázi 8) ---- */}
+  {/* [DOPLNIT ve fázi 8: JSON-LD ImageObject, VideoObject, BreadcrumbList] */}
+
+  <ContactCtaBand />
 </BaseLayout>
+
+<style>
+  /* ---- Breadcrumbs ---- */
+  .breadcrumbs {
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .breadcrumbs__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .breadcrumbs__list li + li::before {
+    content: '/';
+    margin-right: 0.5rem;
+    opacity: 0.4;
+  }
+
+  .breadcrumbs__list a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+
+  .breadcrumbs__list a:hover {
+    color: var(--color-accent-ink);
+  }
+
+  /* ---- Hero ---- */
+  .project-hero__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+    align-items: start;
+  }
+
+  @media (min-width: 768px) {
+    .project-hero__inner {
+      grid-template-columns: 1fr 1.3fr;
+      gap: var(--space-14);
+      align-items: center;
+    }
+  }
+
+  .project-hero__title {
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-block: var(--space-3) var(--space-5);
+    color: var(--color-heading);
+  }
+
+  .project-hero__summary {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-7);
+    max-width: 54ch;
+  }
+
+  .project-hero__cover {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+    display: block;
+  }
+
+  /* Meta dl */
+  .project-hero__dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.35rem 1rem;
+    font-size: var(--text-sm);
+  }
+
+  .project-hero__dl dt {
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+
+  .project-hero__dl dd {
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  /* Badges */
+  .service-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.1rem 0.6rem;
+    border-radius: 999px;
+    background: var(--color-accent-soft);
+    color: var(--color-accent-ink);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  /* ---- Brief grid ---- */
+  .project-brief-grid {
+    gap: var(--space-8);
+  }
+
+  .project-brief-block {
+    padding: var(--space-6);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .project-block-heading {
+    font-size: var(--text-base);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent-ink);
+    margin-bottom: var(--space-3);
+  }
+</style>

@@ -1,0 +1,168 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+/**
+ * Karta projektu podle datového modelu v sekci 8 zadání.
+ * Zobrazí název klienta pouze pokud je schválený a jde o přímého klienta.
+ */
+interface Props {
+  title: string;
+  href: string;
+  summary: string;
+  image: ImageMetadata;
+  imageAlt: string;
+  year?: number | string;
+  location?: string;
+  services?: string[];
+  client?: string;
+  showClientName?: boolean;
+  relationship?: 'direct' | 'subcontract' | 'brokered';
+  featured?: boolean;
+}
+
+const {
+  title,
+  href,
+  summary,
+  image,
+  imageAlt,
+  year,
+  location,
+  services = [],
+  client,
+  showClientName = false,
+  relationship = 'direct',
+} = Astro.props;
+
+const visibleClient =
+  showClientName && relationship === 'direct' && client ? client : undefined;
+const metaParts = [visibleClient, location, year ? String(year) : undefined].filter(
+  Boolean
+);
+---
+
+<article class="project-card" data-reveal>
+  <a class="project-card__link" href={href}>
+    <div class="project-card__media">
+      <Picture
+        src={image}
+        alt={imageAlt}
+        formats={['avif', 'webp']}
+        widths={[480, 768, 1200]}
+        sizes="(min-width: 64rem) 46vw, 94vw"
+        loading="lazy"
+        decoding="async"
+        class="project-card__img"
+      />
+      {
+        services.length > 0 && (
+          <ul class="project-card__badges" aria-label="Použité služby">
+            {services.map((service) => (
+              <li class="project-card__badge">{service}</li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    <div class="project-card__body">
+      {metaParts.length > 0 && <p class="project-card__meta">{metaParts.join(' · ')}</p>}
+      <h3 class="project-card__title">{title}</h3>
+      <p class="project-card__summary">{summary}</p>
+    </div>
+  </a>
+</article>
+
+<style>
+  .project-card {
+    background-color: var(--color-surface);
+    border: var(--border-thin) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition:
+      border-color var(--transition-base),
+      transform var(--transition-base),
+      box-shadow var(--transition-base);
+  }
+
+  .project-card:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(calc(-1 * var(--space-1)));
+    box-shadow: var(--shadow-sm);
+  }
+
+  .project-card__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+  }
+
+  .project-card__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background-color: var(--color-surface-elevated);
+  }
+
+  .project-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .project-card:hover .project-card__img {
+    transform: scale(1.03);
+  }
+
+  .project-card__badges {
+    position: absolute;
+    left: var(--space-4);
+    bottom: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .project-card__badge {
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-media-text);
+    background-color: var(--color-media-surface);
+    border: var(--border-thin) solid var(--color-media-border);
+    border-radius: var(--radius-pill);
+    backdrop-filter: blur(var(--space-2));
+  }
+
+  .project-card__body {
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-6);
+  }
+
+  .project-card__meta {
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-accent-ink);
+  }
+
+  .project-card__title {
+    font-size: var(--text-xl);
+    color: var(--color-text);
+  }
+
+  .project-card__summary {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+  }
+</style>

@@ -24,9 +24,10 @@ import { ACTIVE_THEME, siteConfig } from '../config/site';
 interface Props {
   title: string;
   description: string;
+  noindex?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
 const canonicalUrl = Astro.site
   ? new URL(Astro.url.pathname, Astro.site).toString()
   : Astro.url.pathname;
@@ -39,8 +40,10 @@ const canonicalUrl = Astro.site
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalUrl} />
     <meta name="generator" content={Astro.generator} />
+    <slot name="head" />
     <ClientRouter />
   </head>
   <body>
@@ -51,5 +54,48 @@ const canonicalUrl = Astro.site
     </main>
     <Footer />
     <MobileStickyBar />
+
+    <script>
+      function initScrollReveal() {
+        const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+        if (targets.length === 0) return;
+
+        const prefersReducedMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)'
+        ).matches;
+
+        if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+          targets.forEach((el) => el.setAttribute('data-reveal', 'visible'));
+          return;
+        }
+
+        document.documentElement.classList.add('js-reveal');
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.setAttribute('data-reveal', 'visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.05 }
+        );
+
+        targets.forEach((el) => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight * 0.95) {
+            el.setAttribute('data-reveal', 'visible');
+          } else {
+            el.setAttribute('data-reveal', 'hidden');
+            observer.observe(el);
+          }
+        });
+      }
+
+      initScrollReveal();
+      document.addEventListener('astro:page-load', initScrollReveal);
+    </script>
   </body>
 </html>
