@@ -4,19 +4,30 @@ interface Props {
 }
 
 const { className = '' } = Astro.props;
+const gradientId = `brand-logo-peach-${className.replace(/[^a-zA-Z0-9_-]/g, '-') || 'default'}`;
 ---
 
 <svg
   class:list={['brand-logo', className]}
   xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 320 108"
+  viewBox="0 0 400 128"
+  role="img"
   aria-hidden="true"
   focusable="false"
 >
-  <text class="brand-logo__wordmark" x="5" y="72">MINKA</text>
-  <path class="brand-logo__slash" d="M18 18H34L75 72H59Z" />
-  <path class="brand-logo__rule" d="M18 94H111M208 94H301" />
-  <text class="brand-logo__tagline" x="160" y="101" text-anchor="middle">CREATIVE</text>
+  <defs>
+    <linearGradient id={gradientId} x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#f6a58f" />
+      <stop offset="1" stop-color="#ffe3c3" />
+    </linearGradient>
+  </defs>
+  <circle class="brand-logo__badge" cx="64" cy="64" r="55" fill={`url(#${gradientId})`} />
+  <path
+    class="brand-logo__monogram"
+    d="M37 85 48 28c1-5 8-5 8 1l-5 32 13-31c3-7 11-6 10 2l-4 30 14-30c3-6 12-4 10 3L87 85"
+  />
+  <text class="brand-logo__wordmark" x="133" y="77">MINKA</text>
+  <text class="brand-logo__tagline" x="236" y="108" text-anchor="middle">CREATIVE</text>
 </svg>
 
 <style>
@@ -28,29 +39,27 @@ const { className = '' } = Astro.props;
     color: var(--color-text);
   }
 
+  .brand-logo__monogram {
+    fill: none;
+    stroke: var(--color-text);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   .brand-logo__wordmark {
     fill: currentColor;
     font-family: 'Space Grotesk', Arial, sans-serif;
-    font-size: 76px;
+    font-size: 58px;
     font-weight: 700;
     letter-spacing: 0.6px;
   }
 
-  .brand-logo__slash {
-    fill: #f2ad3e;
-  }
-
-  .brand-logo__rule {
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.5;
-  }
-
   .brand-logo__tagline {
-    fill: currentColor;
+    fill: #e99883;
     font-family: 'Inter', Arial, sans-serif;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 500;
-    letter-spacing: 0.6px;
+    letter-spacing: 2px;
   }
 </style>
