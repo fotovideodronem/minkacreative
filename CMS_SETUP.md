@@ -39,10 +39,10 @@ Git.
 
 In the Cloudflare dashboard, open **Workers & Pages → minka-creative → Settings →
 Variables and Secrets**. Add `KEYSTATIC_GITHUB_CLIENT_ID`,
-`KEYSTATIC_GITHUB_CLIENT_SECRET`, and `KEYSTATIC_SECRET` as secrets. Add
-`PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` as a regular variable. Never commit or share the
-secret values. After saving the Worker settings, open `/keystatic/` on the deployed
-site and sign in with GitHub.
+`KEYSTATIC_GITHUB_CLIENT_SECRET`, and `KEYSTATIC_SECRET` as secrets. The public app
+slug is configured as a regular variable in `wrangler.jsonc`. Never commit or share
+the secret values. After changing secrets, deploy with `npm run cf:deploy`, then
+open `/keystatic/` on the deployed site and sign in with GitHub.
 
 When GitHub storage is active, saving an entry writes it to the repository. The
 Cloudflare Git integration should then rebuild and deploy the site from the updated

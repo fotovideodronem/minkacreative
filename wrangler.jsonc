@@ -4,6 +4,9 @@
   "compatibility_date": "2026-11-27",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
+  "vars": {
+    "PUBLIC_KEYSTATIC_GITHUB_APP_SLUG": "minka-creative"
+  },
   "assets": {
     "directory": "./dist/client",
     "binding": "ASSETS"
