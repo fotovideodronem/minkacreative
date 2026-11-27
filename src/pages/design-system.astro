@@ -97,7 +97,7 @@ const galleryItems = [
       <div class="grid grid--2">
         <div class="ds-panel">
           <span class="eyebrow">Nadpisy a text</span>
-          <h1>Nadpis H1</h1>
+          <p class="ds-type-sample--h1">Nadpis H1</p>
           <h2>Nadpis H2 — sekce</h2>
           <h3>Nadpis H3 — podsekce nebo karta</h3>
           <p class="lead">
@@ -223,7 +223,7 @@ const galleryItems = [
       <div class="grid grid--2">
         <ProjectCard
           title="[DOPLNIT: Ukázkový projekt — přímý klient]"
-          href="/portfolio/ukazka-projektu/"
+          href="/portfolio/ukazka-stavba/"
           summary="[DOPLNIT: Krátké shrnutí projektu na 1 až 2 věty.]"
           image={landscapeImg}
           imageAlt="[DOPLNIT: Zástupný snímek projektu 1]"
@@ -236,7 +236,7 @@ const galleryItems = [
         />
         <ProjectCard
           title="[DOPLNIT: Ukázkový projekt — subdodávka bez klienta]"
-          href="/portfolio/ukazka-projektu/"
+          href="/portfolio/ukazka-firemni-video/"
           summary="[DOPLNIT: Krátké shrnutí projektu — u subdodávky se jméno klienta neuvádí.]"
           image={heroPoster}
           imageAlt="[DOPLNIT: Zástupný snímek projektu 2]"
@@ -328,6 +328,14 @@ const galleryItems = [
 </script>
 
 <style>
+  .ds-type-sample--h1 {
+    font-family: var(--font-display);
+    font-size: var(--text-4xl);
+    font-weight: var(--font-bold);
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-tight);
+  }
+
   .ds-toolbar {
     background-color: var(--color-surface);
     border-bottom: var(--border-thin) solid var(--color-border);

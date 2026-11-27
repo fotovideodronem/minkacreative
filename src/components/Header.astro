@@ -13,8 +13,10 @@ const isServicesActive =
 <header class="site-header">
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/">
-      <span class="site-header__brand-mark" aria-hidden="true"></span>
-      <span>{siteConfig.brandName}</span>
+      <span class="site-header__brand-word">
+        <span class="site-header__brand-minka">MINKA</span>
+        <span class="site-header__brand-creative">Creative</span>
+      </span>
     </a>
 
     <!-- Desktopová navigace -->
@@ -325,22 +327,33 @@ const isServicesActive =
   .site-header__brand {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-3);
-    font-family: var(--font-display);
-    font-size: var(--text-lg);
-    font-weight: var(--font-bold);
-    letter-spacing: var(--tracking-tight);
     text-decoration: none;
     white-space: nowrap;
     min-height: var(--touch-target-min);
   }
 
-  .site-header__brand-mark {
-    width: var(--space-3);
-    height: var(--space-3);
-    border-radius: var(--radius-pill);
-    background-color: var(--color-accent);
-    flex-shrink: 0;
+  .site-header__brand-word {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.48rem;
+    line-height: 1;
+  }
+
+  .site-header__brand-minka {
+    display: inline-block;
+    font-family: 'Space Grotesk', var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    color: var(--color-text);
+  }
+
+  .site-header__brand-creative {
+    font-family: 'Space Grotesk', var(--font-display);
+    font-size: 0.98rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--color-text-muted);
   }
 
   /* Desktopová navigace */

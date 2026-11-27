@@ -49,9 +49,59 @@ const galleryItems = data.gallery.map((g) => ({
   alt: g.alt,
   caption: g.caption,
 }));
+
+const projectUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const projectStructuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Domů',
+          item: 'https://minka-creative.cz/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Portfolio',
+          item: 'https://minka-creative.cz/portfolio/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: data.title,
+          item: projectUrl,
+        },
+      ],
+    },
+    {
+      '@type': 'ImageObject',
+      name: data.title,
+      description: data.summary,
+      caption: data.coverAlt,
+      contentUrl: new URL(data.cover.src, Astro.site).toString(),
+      thumbnailUrl: new URL(data.cover.src, Astro.site).toString(),
+    },
+    ...(data.videoUrl
+      ? [{
+          '@type': 'VideoObject',
+          name: data.videoTitle ?? data.title,
+          description: data.summary,
+          thumbnailUrl: data.videoPoster
+            ? new URL(data.videoPoster.src, Astro.site).toString()
+            : undefined,
+          contentUrl: data.videoUrl,
+        }]
+      : []),
+  ],
+};
 ---
 
-<BaseLayout title={pageTitle} description={pageDesc}>
+<BaseLayout title={pageTitle} description={pageDesc} image={data.cover.src} type="article">
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(projectStructuredData)} />
   {/* Preload cover image (LCP) */}
   <link
     slot="head"
@@ -208,9 +258,6 @@ const galleryItems = data.gallery.map((g) => ({
       </div>
     </section>
   )}
-
-  {/* ---- JSON-LD (placeholder, plné SEO ve fázi 8) ---- */}
-  {/* [DOPLNIT ve fázi 8: JSON-LD ImageObject, VideoObject, BreadcrumbList] */}
 
   <ContactCtaBand />
 </BaseLayout>

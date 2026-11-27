@@ -1,5 +1,6 @@
 ---
 import Button from './Button.astro';
+import { getPageCopy } from '../utils/pageCopy';
 
 /**
  * Záhlaví obsahové sekce s nadpisem, volitelným štítkem, perexem a odkazem.
@@ -12,6 +13,7 @@ interface Props {
   actionLabel?: string;
   actionHref?: string;
   headingLevel?: 'h1' | 'h2';
+  cmsEditable?: boolean;
 }
 
 const {
@@ -22,16 +24,25 @@ const {
   actionLabel,
   actionHref,
   headingLevel = 'h2',
+  cmsEditable = false,
 } = Astro.props;
 
+const pageKey = Astro.url.pathname === '/'
+  ? 'home'
+  : Astro.url.pathname.split('/').filter(Boolean).join('-');
+const pageCopy = cmsEditable ? await getPageCopy(pageKey) : undefined;
 const HeadingTag = headingLevel;
 ---
 
 <div class:list={['section-header', `section-header--${align}`]} data-reveal>
   <div class="section-header__copy">
-    {eyebrow && <span class="eyebrow">{eyebrow}</span>}
-    <HeadingTag class="section-header__title">{heading}</HeadingTag>
-    {lead && <p class="lead section-header__lead">{lead}</p>}
+    {(pageCopy?.data.eyebrow || eyebrow) && (
+      <span class="eyebrow">{pageCopy?.data.eyebrow || eyebrow}</span>
+    )}
+    <HeadingTag class="section-header__title">{pageCopy?.data.heading || heading}</HeadingTag>
+    {(pageCopy?.data.lead || lead) && (
+      <p class="lead section-header__lead">{pageCopy?.data.lead || lead}</p>
+    )}
   </div>
 
   {

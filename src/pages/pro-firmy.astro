@@ -1,14 +1,48 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PlaceholderPage from '../components/PlaceholderPage.astro';
+import ServiceTemplate from '../components/ServiceTemplate.astro';
+import landscapeImg from '../assets/placeholders/landscape-4x3.png';
+import portraitImg from '../assets/placeholders/portrait-3x4.png';
+import squareImg from '../assets/placeholders/square-1x1.png';
+import type { ServicePageData } from '../types/service';
+const data: ServicePageData = {
+  seoTitle: 'Foto a video pro firmy a značky | Minka Creative',
+  seoDescription: 'Firemní fotografie a videa pro prezentaci, reklamu, zaměstnance a sociální sítě.',
+  eyebrow: 'Pro firmy a značky',
+  title: 'Foto a video pro firmy, které chcete ukázat kvalitně',
+  summaryLead: 'Pomohu firmám vytvořit vizuální materiál pro web, prezentace, tisk i sociální sítě. Zaměřuji se na výrobní prostředí, lidi, produkty a konkrétní příběh firmy.',
+  summaryBody: 'Před natáčením upřesníme účel materiálů, cílovou skupinu, počet výstupů a požadovaný styl. Vhodně spojíme celkové pohledy, detaily a reálný průběh práce, aby výsledky odpovídaly tomu, jak firma skutečně funguje.',
+  heroImage: landscapeImg,
+  heroImageAlt: '[DOPLNIT: Reálný snímek firemní zakázky]',
+  specs: [
+    { label: 'Služby', value: 'Foto, video, dron' },
+    { label: 'Použití', value: 'Web, tisk, sociální sítě' },
+    { label: 'Dodání', value: '[DOPLNIT: termín dodání]', isPlaceholder: true },
+    { label: 'Oblast', value: 'Vlašim, Benešov, Praha a okolí' },
+  ],
+  benefitsHeading: 'Obsah podle cílů firmy',
+  benefits: [
+    { title: 'Firemní prezentace', description: 'Autentický pohled na tým, budovy, procesy a prostředí firmy.' },
+    { title: 'Produkty a služby', description: 'Snímky i krátká videa zaměřená na to, co firma nabízí.' },
+    { title: 'Obsah pro sociální sítě', description: 'Dynamický materiál ve formátech vhodných pro běžné kanály.' },
+    { title: 'Jednotná vizuální péče', description: 'Opakované natáčení lze vést jednotným stylem a barevností.' },
+  ],
+  galleryHeading: 'Ukázky firemní práce',
+  gallery: [
+    { image: portraitImg, alt: '[DOPLNIT: Reálný snímek z práce firmy]', caption: '[DOPLNIT: Popisek realizace]' },
+    { image: squareImg, alt: '[DOPLNIT: Reálný produktový nebo procesní detail]', caption: '[DOPLNIT: Popisek realizace]' },
+  ],
+  processSteps: [
+    { title: 'Briefing', description: 'Určíme cíl, kanály použití, termín a hlavní sdělení.' },
+    { title: 'Příprava', description: 'Dohodneme plán záběrů, požadavky na mise-en-scène a účastníky.' },
+    { title: 'Realizace', description: 'Na místě zachytíme celky i detaily bez zbytečných průtahů.' },
+    { title: 'Dodání', description: 'Materiály upravíme a předáme ve sjednaných formátech.' },
+  ],
+  projects: [],
+  faq: [
+    { question: 'Funguje spolupráce i pro jednorázovou reklamu?', answer: 'Ano. Mohu připravit jednu konkrétní fotoseanci i krátké video.' },
+    { question: 'Můžeme natáčet během běžného provozu firmy?', answer: 'Ano, plán nastavíme tak, aby vzniklý materiál co nejméně ovlivnil provoz.' },
+    { question: 'Dodáváte materiály i pro sociální sítě?', answer: 'Ano. Formáty a rozměry exportů domluvíme podle konkrétních kanálů.' },
+  ],
+};
 ---
-
-<BaseLayout
-  title="Foto a video pro firmy | Minka Creative"
-  description="[DOPLNIT: služby pro firmy a značky]"
->
-  <PlaceholderPage
-    heading="Pro firmy a značky"
-    routeNote="Trasa: /pro-firmy/ · Segment firmy a značky."
-  />
-</BaseLayout>
+<ServiceTemplate data={data} galleryId="segment-firmy" />

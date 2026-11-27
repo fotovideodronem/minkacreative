@@ -1,14 +1,47 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PlaceholderPage from '../components/PlaceholderPage.astro';
+import ServiceTemplate from '../components/ServiceTemplate.astro';
+import portraitImg from '../assets/placeholders/portrait-3x4.png';
+import landscapeImg from '../assets/placeholders/landscape-4x3.png';
+import type { ServicePageData } from '../types/service';
+const data: ServicePageData = {
+  seoTitle: 'Focení a natáčení maturitních plesů | Minka Creative',
+  seoDescription: 'Reportážní fotografie a maturitní video pro školy a studenty.',
+  eyebrow: 'Maturitní plesy',
+  title: 'Fotografie a video z maturitních plesů',
+  summaryLead: 'Zaznamenávám atmosféru maturitních plesů, důležité okamžiky programu i společné fotografie. Výstupy připravím pro maturanty, školu i propagaci dalšího ročníku.',
+  summaryBody: 'Před plesem dohodneme harmonogram slavnostních momentů, místo skupinových fotek, délku natáčení i způsob předání. U citlivých snímků dětí a mladých dospělých ověřujeme souhlas a oprávnění ke zveřejnění.',
+  heroImage: portraitImg,
+  heroImageAlt: '[DOPLNIT: Reálný snímek z maturitního plesu]',
+  specs: [
+    { label: 'Výstupy', value: 'Fotky, video, promo výběr' },
+    { label: 'Souhlas', value: 'Před zveřejněním ověřit' },
+    { label: 'Dodání', value: '[DOPLNIT: termín dodání]', isPlaceholder: true },
+    { label: 'Oblast', value: 'Vlašim, Benešov, Praha a okolí' },
+  ],
+  benefitsHeading: 'Co z plesu přináším',
+  benefits: [
+    { title: 'Důležité momenty', description: 'Zachytím zahájení, předání, tanec i další domluvené body programu.' },
+    { title: 'Skupinové fotografie', description: 'Připravíme jasný harmonogram, aby vznikly přehledné výstupy pro všechny.' },
+    { title: 'Atmosféra večera', description: 'Doplňuji portréty a reportážní snímky o detaily prostoru a programu.' },
+    { title: 'Případně maturitní video', description: 'Krátké nebo dlouhé zpracování lze domluvit podle účelu a rozpočtu.' },
+  ],
+  galleryHeading: 'Ukázky plesových snímků',
+  gallery: [
+    { image: landscapeImg, alt: '[DOPLNIT: Reálný snímek z maturitního plesu]', caption: '[DOPLNIT: Popisek momentu]' },
+    { image: portraitImg, alt: '[DOPLNIT: Reálná skupinová nebo portrétní fotografie]', caption: '[DOPLNIT: Popisek momentu]' },
+  ],
+  processSteps: [
+    { title: 'Domluva programu', description: 'Předáme si harmonogram a seznam klíčových momentů a osob.' },
+    { title: 'Příprava míst', description: 'Určíme místo fotek, prostor pro osvětlení a orientační pořadí.' },
+    { title: 'Samotný ples', description: 'Zachytím slavnostní program i atmosféru bez rušení události.' },
+    { title: 'Dodání', description: 'Fotky a případně video upravíme a předáme podle domluvy.' },
+  ],
+  projects: [],
+  faq: [
+    { question: 'Funguje i focení pouze části programu?', answer: 'Ano. Rozsah lze nastavit podle délky plesu a potřeb školy.' },
+    { question: 'Kdy se mají pořizovat skupinové fotografie?', answer: 'Časově je vhodné vymezit před zahájením taneční části nebo během přesného programu.' },
+    { question: 'Jak se řeší zveřejnění fotek?', answer: 'Souhlasy a způsob zveřejnění ověřujeme s organizátorem před použitím materiálů.' },
+  ],
+};
 ---
-
-<BaseLayout
-  title="Maturitní plesy | Minka Creative"
-  description="[DOPLNIT: záznam maturitních plesů a maturitní video]"
->
-  <PlaceholderPage
-    heading="Maturitní plesy"
-    routeNote="Trasa: /maturitni-plesy/ · Záznam plesů a maturitní video."
-  />
-</BaseLayout>
+<ServiceTemplate data={data} galleryId="segment-maturita" />

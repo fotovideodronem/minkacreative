@@ -1,14 +1,51 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PlaceholderPage from '../../components/PlaceholderPage.astro';
----
+import ServiceTemplate from '../../components/ServiceTemplate.astro';
+import landscapeImg from '../../assets/placeholders/landscape-4x3.png';
+import portraitImg from '../../assets/placeholders/portrait-3x4.png';
+import squareImg from '../../assets/placeholders/square-1x1.png';
+import tallImg from '../../assets/placeholders/tall-4x5.png';
+import type { ServicePageData } from '../../types/service';
 
-<BaseLayout
-  title="Fotografické služby | Minka Creative"
-  description="[DOPLNIT: fotografické služby]"
->
-  <PlaceholderPage
-    heading="Fotografické služby"
-    routeNote="Trasa: /sluzby/foto/ · Služba Foto."
-  />
-</BaseLayout>
+const data: ServicePageData = {
+  seoTitle: 'Fotografické služby | Minka Creative',
+  seoDescription: 'Fotografie firem, staveb, interiérů, akcí a obcí. Výstupy připravené pro web i tisk.',
+  eyebrow: 'Fotografické služby',
+  title: 'Profesní fotografie pro firmy i veřejné projekty',
+  summaryLead: 'Fotím firmy, produkty, stavby, interiéry, akce a místa. Výsledkem jsou upravené snímky připravené pro web, tisk, sociální sítě i interní použití.',
+  summaryBody: 'Každá zakázka začíná účelem výsledných fotek: prezentace, dokumentace, reklama nebo archiv. Dohodneme místo, světlo, počet výstupů, použití licencovaných souborů a termín dodání.',
+  heroImage: landscapeImg,
+  heroImageAlt: '[DOPLNIT: Reálný snímek z firemní nebo dokumentární fotografie]',
+  specs: [
+    { label: 'Služba', value: 'Reportáž, architektura, promo' },
+    { label: 'Výstupy', value: '[DOPLNIT: počet upravených fotek]', isPlaceholder: true },
+    { label: 'Dodání', value: '[DOPLNIT: termín dodání]', isPlaceholder: true },
+    { label: 'Oblast', value: 'Vlašim, Benešov, Praha a okolí' },
+  ],
+  benefitsHeading: 'Co fotografie umí',
+  benefits: [
+    { title: 'Přesně podle účelu', description: 'Fotky ladím podle toho, zda budou na webu, ve zprávě, na billboardu nebo v sociálních sítích.' },
+    { title: 'Příprava i editace', description: 'Dohodneme rozsah, styl barev, retuš a požadované formáty tak, aby výstupy šly ihned použít.' },
+    { title: 'Průběh i detail', description: 'Doplňím celkové pohledy o detaily, lidí a procesy, které dávají projektu souvislost.' },
+    { title: 'Long-term spolupráce', description: 'Při pravidelném dokumentování lze zachovat jednotný pohled i barevnou identitu.' },
+  ],
+  galleryHeading: 'Ukázky fotografické práce',
+  gallery: [
+    { image: portraitImg, alt: '[DOPLNIT: Reálná ukázka portrétu nebo zakázky]', caption: '[DOPLNIT: Popisek realizace]' },
+    { image: squareImg, alt: '[DOPLNIT: Reálný detail projektu]', caption: '[DOPLNIT: Popisek projektu]' },
+    { image: tallImg, alt: '[DOPLNIT: Reálný snímek z akce nebo stavby]', caption: '[DOPLNIT: Popisek realizace]' },
+  ],
+  processSteps: [
+    { title: 'Krátký briefing', description: 'Upřesníme účel fotek, místo, termín, osoby na snímku i požadované výstupy.' },
+    { title: 'Příprava realizace', description: 'Dohodneme harmonogram, přístup, světlo, rekvizity a případnou nutnou domluvu míst.' },
+    { title: 'Natáčení', description: 'Pracuji přehledně a systematicky, aby byly zachyceny celek i důležité detaily.' },
+    { title: 'Editace a dodání', description: 'Fotky upravím, exportuji ve sjednaném formátu a předám jednoduše stahovatelným odkazem.' },
+  ],
+  projects: [],
+  faq: [
+    { question: 'Kolik upravených fotek dostanu?', answer: '[DOPLNIT: Rozsah dodávky se stanoví předem podle typu a délky zakázky.]' },
+    { question: 'Poskytnete fotky ve více formátech?', answer: 'Ano, podle dohody exportuji podklad pro web, print i sociální sítě.' },
+    { question: 'Lze fotky použít pro reklamu?', answer: '[DOPLNIT: Licenční podmínky, média, období a území je nutné sjednat před realizací.]' },
+  ],
+};
+---
+<ServiceTemplate data={data} galleryId="service-foto" />

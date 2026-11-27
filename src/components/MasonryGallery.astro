@@ -26,7 +26,8 @@ const { items, galleryId = 'galerie', columns = 3 } = Astro.props;
 
 const resolvedItems = await Promise.all(
   items.map(async (item) => {
-    const lightboxTargetWidth = Math.min(item.image.width, 1600);
+    const sourceWidth = item.image?.width ?? 1600;
+    const lightboxTargetWidth = Math.min(sourceWidth, 1600);
     const fullImage = await getImage({
       src: item.image,
       width: lightboxTargetWidth,

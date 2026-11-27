@@ -1,14 +1,48 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PlaceholderPage from '../components/PlaceholderPage.astro';
+import ServiceTemplate from '../components/ServiceTemplate.astro';
+import heroImg from '../assets/placeholders/hero-16x9.png';
+import landscapeImg from '../assets/placeholders/landscape-4x3.png';
+import squareImg from '../assets/placeholders/square-1x1.png';
+import type { ServicePageData } from '../types/service';
+const data: ServicePageData = {
+  seoTitle: 'Focení interiérů a architektury | Minka Creative',
+  seoDescription: 'Fotografie interiérů, exteriérů a architektonických projektů pro realitky, architekty a investory.',
+  eyebrow: 'Interiéry a architektura',
+  title: 'Focení interiérů, exteriérů a architektury',
+  summaryLead: 'Fotím interiéry, nemovitosti, exteriéry i architektonické projekty pro realitky, architekty, developery a vlastníky. Záběry zachycují prostor, světlo, materiály i použití budovy.',
+  summaryBody: 'Před natáčením nastavím úhel, pořadí místností a požadovaný počet snímků. Fotky lze připravit s přírodní nebo kontrolovanou světelnou situací a upravit pro inzertní portály, weby i publikace.',
+  heroImage: heroImg,
+  heroImageAlt: '[DOPLNIT: Reálný snímek interiéru nebo architektury]',
+  specs: [
+    { label: 'Výstupy', value: 'Foto i virtuální prezentace' },
+    { label: 'Použití', value: 'Web, realitní portály, tisk' },
+    { label: 'Dodání', value: '[DOPLNIT: termín dodání]', isPlaceholder: true },
+    { label: 'Oblast', value: 'Vlašim, Benešov, Praha a okolí' },
+  ],
+  benefitsHeading: 'Co při focení prostoru řeším',
+  benefits: [
+    { title: 'Přehledný celek', description: 'Snímky ukazují dispozici, proporce i návaznosti jednotlivých místností.' },
+    { title: 'Detaily materiálů', description: 'Zachytím povrchy, vybavení a prvky důležité pro charakter projektu.' },
+    { title: 'Vhodné světlo', description: 'Termín ladíme podle denního světla i přirozených exteriérových podmínek.' },
+    { title: 'Výstupy pro kanály', description: 'Rozměry exportu přizpůsobím inzertním portálům, webu nebo tiskovým materiálům.' },
+  ],
+  galleryHeading: 'Ukázky interiérů a architektury',
+  gallery: [
+    { image: landscapeImg, alt: '[DOPLNIT: Reálný snímek interiéru]', caption: '[DOPLNIT: Popisek realizace]' },
+    { image: squareImg, alt: '[DOPLNIT: Reálný architektonický detail]', caption: '[DOPLNIT: Popisek realizace]' },
+  ],
+  processSteps: [
+    { title: 'Informace o prostoru', description: 'Upřesníme typ nemovitosti, účel fotek a hlavní požadavky.' },
+    { title: 'Příprava', description: 'Dohodneme čas, pořadí místností a základní stav prostoru.' },
+    { title: 'Focení', description: 'Pořídím celkové pohledy i detaily podle předem stanoveného seznamu.' },
+    { title: 'Editace a dodání', description: 'Fotky upravím a dodám ve formátech vhodných pro váš kanál.' },
+  ],
+  projects: [],
+  faq: [
+    { question: 'Musí být prostor před focením upravený?', answer: 'Ano. Doporučím základní úklid, odstranění osobních drobností a úpravu světel či závěsů.' },
+    { question: 'Fotíte i exteriér a okolí nemovitosti?', answer: 'Ano, pokud to je součástí poptávky a termín umožňuje vhodné světlo.' },
+    { question: 'Dodáváte snímky přímo na realitní portály?', answer: 'Ano. Výstupní rozměry lze připravit podle požadavků konkrétního portálu.' },
+  ],
+};
 ---
-
-<BaseLayout
-  title="Interiéry a architektura | Minka Creative"
-  description="[DOPLNIT: focení interiérů, exteriérů a architektury]"
->
-  <PlaceholderPage
-    heading="Interiéry a architektura"
-    routeNote="Trasa: /interiery-architektura/ · Realitky, interiéry, exteriéry, architektura."
-  />
-</BaseLayout>
+<ServiceTemplate data={data} galleryId="segment-interiery" />

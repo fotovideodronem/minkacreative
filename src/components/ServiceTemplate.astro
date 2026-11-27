@@ -1,5 +1,5 @@
 ---
-import { Picture, getImage } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from './Button.astro';
 import SectionHeader from './SectionHeader.astro';
@@ -12,6 +12,7 @@ import ContactCtaBand from './ContactCtaBand.astro';
 import Lightbox from './Lightbox.astro';
 import { siteConfig } from '../config/site';
 import type { ServicePageData } from '../types/service';
+import { getPageCopy } from '../utils/pageCopy';
 
 /**
  * Znovupoužitelná šablona stránky služby nebo segmentu (Fáze 4 zadání).
@@ -23,16 +24,66 @@ interface Props {
 }
 
 const { data, galleryId } = Astro.props;
+const pageKey = Astro.url.pathname.split('/').filter(Boolean).join('-');
+const pageCopy = await getPageCopy(pageKey);
+const pageData: ServicePageData = {
+  ...data,
+  seoTitle: pageCopy?.data.seoTitle || data.seoTitle,
+  seoDescription: pageCopy?.data.seoDescription || data.seoDescription,
+  eyebrow: pageCopy?.data.eyebrow || data.eyebrow,
+  title: pageCopy?.data.heading || data.title,
+  summaryLead: pageCopy?.data.lead || data.summaryLead,
+  summaryBody: pageCopy?.data.summary || data.summaryBody,
+};
 
-const preloadedHero = await getImage({
-  src: data.heroImage,
-  width: 1200,
-  format: 'webp',
-});
+const pageUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const serviceStructuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Service',
+      name: pageData.title,
+      description: pageData.summaryLead,
+      url: pageUrl,
+      provider: {
+        '@id': `${Astro.site?.origin ?? 'https://minka-creative.cz'}/#service`,
+      },
+      areaServed: [
+        'Vlašim',
+        'Benešov',
+        'Středočeský kraj',
+        'Praha',
+      ],
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Domů',
+          item: 'https://minka-creative.cz/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Služby',
+          item: 'https://minka-creative.cz/sluzby/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: pageData.title,
+          item: pageUrl,
+        },
+      ],
+    },
+  ],
+};
 ---
 
-<BaseLayout title={data.seoTitle} description={data.seoDescription}>
-  <link slot="head" rel="preload" as="image" href={preloadedHero.src} />
+<BaseLayout title={pageData.seoTitle} description={pageData.seoDescription}>
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(serviceStructuredData)} />
 
   <!-- 1. Úvod služby: drobečková navigace, H1, přímý souhrn (50–80 slov) a hlavní snímek -->
   <section class="service-hero">
@@ -41,17 +92,17 @@ const preloadedHero = await getImage({
         <ol>
           <li><a href="/">Domů</a></li>
           <li><a href="/sluzby/">Služby</a></li>
-          <li aria-current="page">{data.title}</li>
+          <li aria-current="page">{pageData.title}</li>
         </ol>
       </nav>
 
       <div class="service-hero__grid">
         <div class="service-hero__copy">
-          <span class="eyebrow">{data.eyebrow}</span>
-          <h1>{data.title}</h1>
-          <p class="lead">{data.summaryLead}</p>
+          <span class="eyebrow">{pageData.eyebrow}</span>
+          <h1>{pageData.title}</h1>
+          <p class="lead">{pageData.summaryLead}</p>
           <div class="service-hero__summary-box">
-            <p>{data.summaryBody}</p>
+            <p>{pageData.summaryBody}</p>
           </div>
 
           <div class="service-hero__actions">
@@ -82,7 +133,7 @@ const preloadedHero = await getImage({
       <!-- 2. Rychlé parametry: cena od, dodání, formáty, oblast -->
       <dl class="service-specs" aria-label="Základní parametry služby">
         {
-          data.specs.map((spec) => (
+          pageData.specs.map((spec) => (
             <div class="service-spec">
               <dt>{spec.label}</dt>
               <dd class:list={[{ 'is-placeholder': spec.isPlaceholder }]}>{spec.value}</dd>
@@ -98,13 +149,13 @@ const preloadedHero = await getImage({
     <div class="container service-stack">
       <SectionHeader
         eyebrow="Co je součástí"
-        heading={data.benefitsHeading}
-        lead={data.benefitsLead}
+        heading={pageData.benefitsHeading}
+        lead={pageData.benefitsLead}
       />
 
       <div class="grid grid--2">
         {
-          data.benefits.map((benefit) => (
+          pageData.benefits.map((benefit) => (
             <article class="benefit-card" data-reveal>
               <h3 class="benefit-card__title">{benefit.title}</h3>
               <p class="benefit-card__desc">{benefit.description}</p>
@@ -120,22 +171,22 @@ const preloadedHero = await getImage({
     <div class="container service-stack">
       <SectionHeader
         eyebrow="Ukázky práce"
-        heading={data.galleryHeading}
-        lead={data.galleryLead}
+        heading={pageData.galleryHeading}
+        lead={pageData.galleryLead}
       />
 
-      <MasonryGallery items={data.gallery} galleryId={galleryId} />
+      <MasonryGallery items={pageData.gallery} galleryId={galleryId} />
 
       {
-        data.video && (
+        pageData.video && (
           <div class="service-video">
             <VideoBlock
-              title={data.video.title}
-              poster={data.video.poster}
-              posterAlt={data.video.posterAlt}
-              videoUrl={data.video.videoUrl}
-              duration={data.video.duration}
-              caption={data.video.caption}
+              title={pageData.video.title}
+              poster={pageData.video.poster}
+              posterAlt={pageData.video.posterAlt}
+              videoUrl={pageData.video.videoUrl}
+              duration={pageData.video.duration}
+              caption={pageData.video.caption}
             />
           </div>
         )
@@ -148,29 +199,29 @@ const preloadedHero = await getImage({
     <div class="container service-stack">
       <SectionHeader
         eyebrow="Postup"
-        heading={data.processHeading ?? 'Jak spolupráce probíhá'}
-        lead={data.processLead}
+        heading={pageData.processHeading ?? 'Jak spolupráce probíhá'}
+        lead={pageData.processLead}
       />
 
-      <ProcessSteps steps={data.processSteps} />
+      <ProcessSteps steps={pageData.processSteps} />
     </div>
   </section>
 
   <!-- 6. Související projekty -->
   {
-    data.projects.length > 0 && (
+    pageData.projects.length > 0 && (
       <section class="section">
         <div class="container service-stack">
           <SectionHeader
             eyebrow="Z portfolia"
-            heading={data.projectsHeading ?? 'Související realizace'}
-            lead={data.projectsLead}
+            heading={pageData.projectsHeading ?? 'Související realizace'}
+            lead={pageData.projectsLead}
             actionLabel="Celé portfolio"
             actionHref="/portfolio/"
           />
 
           <div class="grid grid--2">
-            {data.projects.map((project) => (
+            {pageData.projects.map((project) => (
               <ProjectCard
                 title={project.title}
                 href={project.href}
@@ -193,23 +244,23 @@ const preloadedHero = await getImage({
 
   <!-- 7. Časté otázky (FAQ) -->
   {
-    data.faq.length > 0 && (
+    pageData.faq.length > 0 && (
       <section class="section section--surface">
         <div class="container container--narrow service-stack">
           <SectionHeader
             eyebrow="FAQ"
-            heading={data.faqHeading ?? 'Časté otázky ke službě'}
-            lead={data.faqLead}
+            heading={pageData.faqHeading ?? 'Časté otázky ke službě'}
+            lead={pageData.faqLead}
           />
 
-          <FaqAccordion items={data.faq} openFirst={true} />
+          <FaqAccordion items={pageData.faq} openFirst={true} />
         </div>
       </section>
     )
   }
 
   <!-- 8. Závěrečný blok Kontakt a Poptávka -->
-  <ContactCtaBand heading={data.ctaHeading} summary={data.ctaSummary} />
+  <ContactCtaBand heading={pageData.ctaHeading} summary={pageData.ctaSummary} />
 
   <Lightbox />
 </BaseLayout>

@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+---
+
+<BaseLayout
+  title="Poptávka odeslána | Minka Creative"
+  description="Potvrzení odeslání nezávazné poptávky."
+  noindex={true}
+>
+  <section class="section">
+    <div class="container thank-you">
+      <span class="eyebrow">Poptávka odeslána</span>
+      <h1>Děkuji za zprávu</h1>
+      <p class="lead">
+        Vaše poptávka byla přijata. O další podrobnosti se ozvu; pokud je řešení
+        časově citlivé, můžete mi napsat nebo zavolat přímo.
+      </p>
+      <div class="thank-you__actions">
+        <Button href="/portfolio/" variant="primary">Podívat se na portfolio</Button>
+        <Button href="/" variant="secondary">Zpět na titulku</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .thank-you {
+    min-height: 45vh;
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: var(--space-5);
+  }
+  .thank-you h1 { margin: 0; }
+  .thank-you__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+</style>

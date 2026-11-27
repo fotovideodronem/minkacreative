@@ -7,7 +7,7 @@ import { glob } from 'astro/loaders';
  * Obrázky odkazovány relativní cestou; Astro je zpracuje přes astro:assets.
  */
 const projects = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
+  loader: glob({ pattern: '**/*.{mdoc,yaml}', base: './src/content/projects' }),
   schema: ({ image }) =>
     z.object({
       title: z.string(),
@@ -71,4 +71,41 @@ const projects = defineCollection({
     }),
 });
 
-export const collections = { projects };
+const testimonials = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/testimonials' }),
+  schema: z.object({
+    title: z.string(),
+    author: z.string(),
+    company: z.string().optional(),
+    quote: z.string(),
+    projectHref: z.string().optional(),
+    published: z.boolean().default(false),
+    order: z.number().default(99),
+  }),
+});
+
+const faqs = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/faqs' }),
+  schema: z.object({
+    title: z.string(),
+    question: z.string(),
+    answer: z.string(),
+    order: z.number().default(99),
+  }),
+});
+
+const pageCopy = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/page-copy' }),
+  schema: z.object({
+    pageKey: z.string(),
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
+    eyebrow: z.string().optional(),
+    heading: z.string().optional(),
+    lead: z.string().optional(),
+    summary: z.string().optional(),
+    summaryText: z.string().optional(),
+  }),
+});
+
+export const collections = { projects, testimonials, faqs, pageCopy };

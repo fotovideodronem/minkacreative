@@ -1,14 +1,67 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PlaceholderPage from '../components/PlaceholderPage.astro';
+import { siteConfig } from '../config/site';
 ---
 
 <BaseLayout
   title="Ochrana osobních údajů | Minka Creative"
-  description="[DOPLNIT: zásady ochrany osobních údajů]"
+  description="Informace o zpracování osobních údajů poskytných prostřednictvím kontaktního formuláře."
 >
-  <PlaceholderPage
-    heading="Ochrana osobních údajů"
-    routeNote="Trasa: /ochrana-osobnich-udaju/ · Zásady zpracování osobních údajů a cookies."
-  />
+  <section class="section legal-page">
+    <div class="container legal-page__inner">
+      <span class="eyebrow">Právní informace</span>
+      <h1>Ochrana osobních údajů</h1>
+      <p class="lead">Údaje z kontaktního formuláře používám pouze k vyřízení poptávky.</p>
+
+      <h2>Kdo zpracovává údaje</h2>
+      <p>
+        Správcem osobních údajů je Jakub Minka, Minka Creative.
+        E-mail a další kontaktní údaje doplnit před spuštěním webu:
+        <span class="placeholder-badge">{siteConfig.contact.email}</span>,
+        telefon {siteConfig.contact.phoneDisplay}.
+      </p>
+
+      <h2>Jaké údaje shromažďuji</h2>
+      <p>
+        Prostřednictvím formuláře zpracovávám jméno, e-mail, telefonní číslo,
+        typ projektu, místo, termín, rozpočet a obsah zprávy. Telefon a termín
+        jsou volitelné.
+      </p>
+
+      <h2>Účel a právní základ</h2>
+      <p>
+        Údaje zpracovávám na základě vašeho souhlasu a pro jednání o konkrétní
+        poptávce. Po vyřízení poptávky údaje uchovávám pouze po dobu nezbytnou
+        pro účetnictví, reklamace nebo obranu právních nároků.
+      </p>
+
+      <h2>Sdílení a bezpečnost</h2>
+      <p>
+        Formulář chrání honeypot proti automatizovanému spamování a údaje se
+        přenášejí z webu poskytovateli formulářových služeb. Konkrétního
+        poskytovatele a dobu ukládání je nutné ověřit před spuštěním.
+      </p>
+
+      <h2>Vaše práva</h2>
+      <p>
+        Máte právo požadovat přístup k údajům, jejich opravu nebo výmaz,
+        omezení zpracování a námitku. Pro uplatnění práv použijte kontaktní údaje
+        uvedené na této stránce.
+      </p>
+
+      <h2>Cookies a měření</h2>
+      <p>
+        Aktuálně není zapnuté žádné analytické měření. Pokud se před spuštěním
+        nastaví Plausible nebo Umami, tato stránka bude doplněna o příslušné
+        informace o zpracování a dobu uchovávání.
+      </p>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .legal-page__inner { max-width: 48rem; }
+  .legal-page h1 { margin: var(--space-3) 0 var(--space-5); }
+  .legal-page h2 { margin-top: var(--space-8); }
+  .legal-page p { line-height: var(--line-relaxed); }
+</style>

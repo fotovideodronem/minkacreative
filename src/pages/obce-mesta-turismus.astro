@@ -1,14 +1,47 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PlaceholderPage from '../components/PlaceholderPage.astro';
+import ServiceTemplate from '../components/ServiceTemplate.astro';
+import fullBleedImg from '../assets/placeholders/fullbleed-21x9.png';
+import landscapeImg from '../assets/placeholders/landscape-4x3.png';
+import type { ServicePageData } from '../types/service';
+const data: ServicePageData = {
+  seoTitle: 'Foto a video pro obce, města a turismus | Minka Creative',
+  seoDescription: 'Fotografie a videa míst, veřejných akcí, projektů a turistických destinací.',
+  eyebrow: 'Obce, města a turismus',
+  title: 'Prezentační foto a video pro obce a turistická centra',
+  summaryLead: 'Pomohu obcím, městům a turistickým organizacím vytvořit materiály o místech, akcích, projektech a dostupných službách. Fotky i krátká videa lze použít na webu, v tisku i na sociálních sítích.',
+  summaryBody: 'Společně určujeme hlavní zprávu: prezentaci destinace, informování obyvatel, propagaci akce nebo dokumentaci investice. Pracujeme s veřejnými prostory i místními provozovatelkami, aby vznikla autentická a prakticky použitelná sada materiálů.',
+  heroImage: fullBleedImg,
+  heroImageAlt: '[DOPLNIT: Reálný snímek obce, místa nebo destinace]',
+  specs: [
+    { label: 'Obsah', value: 'Místa, akce, investice, služby' },
+    { label: 'Výstupy', value: 'Foto, video, letecké záběry' },
+    { label: 'Dodání', value: '[DOPLNIT: termín dodání]', isPlaceholder: true },
+    { label: 'Oblast', value: 'Vlašim, Benešov, Středočeský kraj' },
+  ],
+  benefitsHeading: 'Co pro komunikaci obce vytvoříme',
+  benefits: [
+    { title: 'Prezentace destinace', description: 'Místa, památky, službu i okolní krajinu ukážeme srozumitelně.' },
+    { title: 'Dokumentace akcí', description: 'Zachytíme atmosféru i důležité momenty veřejné události.' },
+    { title: 'Informace o projektech', description: 'Vyfotíme stav realizace i výsledek investice pro veřejnou zprávu.' },
+    { title: 'Obsah pro propagaci', description: 'Materiály lze upravit pro web, tisk, reklamu i sociální sítě.' },
+  ],
+  galleryHeading: 'Ukázky z obcí a turismu',
+  gallery: [
+    { image: landscapeImg, alt: '[DOPLNIT: Reálný snímek obce nebo místa]', caption: '[DOPLNIT: Popisek realizace]' },
+    { image: fullBleedImg, alt: '[DOPLNIT: Reálný pohled na veřejnou akci]', caption: '[DOPLNIT: Popisek realizace]' },
+  ],
+  processSteps: [
+    { title: 'Cíl kampaně', description: 'Určíme, pro koho jsou materiály a kde budou zveřejněné.' },
+    { title: 'Výběr míst', description: 'Připravíme seznam míst, osob, akcí i nutných povolení.' },
+    { title: 'Pořízení obsahu', description: 'Zachytíme celkové pohledy, atmosféru i důležité detaily.' },
+    { title: 'Dodání', description: 'Fotky i video upravíme podle sjednaného použití.' },
+  ],
+  projects: [],
+  faq: [
+    { question: 'Fotíte i veřejné akce a kulturní události?', answer: 'Ano. Rozsah je možné přizpůsobit délce akce i požadovaným výstupům.' },
+    { question: 'Můžeme použít snímky na sociálních sítích obce?', answer: 'Ano, pokud jsou předem ověřené souhlasy osob a autorské licence.' },
+    { question: 'Stíháme i krátké promo video?', answer: 'Ano. Můžeme spojit pohledy na místo, rozhovory, detailní záběry a titulky.' },
+  ],
+};
 ---
-
-<BaseLayout
-  title="Obce, města a turismus | Minka Creative"
-  description="[DOPLNIT: foto a video pro obce a turistická centra]"
->
-  <PlaceholderPage
-    heading="Obce, města a turismus"
-    routeNote="Trasa: /obce-mesta-turismus/ · Segment obce a turismus."
-  />
-</BaseLayout>
+<ServiceTemplate data={data} galleryId="segment-obce" />

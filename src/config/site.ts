@@ -1,3 +1,5 @@
+import siteSettings from '../content/site-settings.json';
+
 /**
  * Centrální konfigurace webu Minka Creative.
  * Všechny kontaktní údaje, odkazy na sítě a navigace jsou na jednom místě.
@@ -23,6 +25,12 @@ export interface SocialLink {
   url: string;
 }
 
+export interface ClientLogo {
+  name: string;
+  image: string;
+  alt: string;
+}
+
 /**
  * Jedna proměnná pro přepnutí varianty vzhledu celého webu:
  * - 'dark'  = tmavý galerijní základ s jantarovým akcentem
@@ -38,12 +46,7 @@ export const siteConfig = {
   domain: 'https://minka-creative.cz',
 
   contact: {
-    phoneDisplay: '+420 731 055 983',
-    phoneHref: 'tel:+420731055983',
-    email: 'DOPLNIT: e-mail',
-    ico: 'DOPLNIT: IČO',
-    serviceArea: 'Vlašim, Benešov, Středočeský kraj, Praha',
-    secondaryArea: 'druhotně Vysočina a Jižní Čechy',
+    ...siteSettings.contact,
   },
 
   externalLinks: {
@@ -53,12 +56,22 @@ export const siteConfig = {
     },
   },
 
-  socialLinks: [
-    { id: 'instagram', label: 'Instagram', url: 'DOPLNIT: Instagram URL' },
-    { id: 'facebook', label: 'Facebook', url: 'DOPLNIT: Facebook URL' },
-    { id: 'youtube', label: 'YouTube', url: 'DOPLNIT: YouTube URL' },
-    { id: 'linkedin', label: 'LinkedIn', url: 'DOPLNIT: LinkedIn URL' },
-  ] satisfies SocialLink[],
+  form: {
+    endpoint: 'https://formspree.io/f/myewagad',
+    successUrl: '/dekuji/',
+  },
+
+  analytics: {
+    provider: 'none' as 'none' | 'plausible' | 'umami',
+    scriptUrl: '',
+    siteId: '',
+  },
+
+  socialLinks: siteSettings.socialLinks.map((link) => ({
+    ...link,
+    id: link.id as SocialLink['id'],
+  })),
+  clientLogos: siteSettings.clientLogos satisfies ClientLogo[],
 
   navigation: {
     servicesOverview: {

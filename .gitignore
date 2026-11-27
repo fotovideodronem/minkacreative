@@ -1,6 +1,7 @@
 # Výstup buildu a cache Astra
 dist/
 .astro/
+.wrangler/
 
 # Závislosti
 node_modules/

@@ -1,14 +1,43 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PlaceholderPage from '../components/PlaceholderPage.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import ContactCtaBand from '../components/ContactCtaBand.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import { getCollection } from 'astro:content';
+
+const testimonials = (await getCollection('testimonials'))
+  .filter(({ data }) => data.published)
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <BaseLayout
   title="Reference | Minka Creative"
-  description="[DOPLNIT: reference klientů]"
+  description="Reference klientů Minka Creative. Citace budou zveřejněny až po ověření souhlasu."
 >
-  <PlaceholderPage
-    heading="Reference"
-    routeNote="Trasa: /reference/ · Reference klientů (budou doplněny z ověřených podkladů)."
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Ohlasy"
+        heading="Reference klientů"
+        lead="Reference zveřejňuji pouze se souhlasem autora."
+        headingLevel="h1"
+        cmsEditable={true}
+      />
+      <div class="grid grid--2">
+        {testimonials.map(({ data }) => (
+          <TestimonialCard
+            quote={data.quote}
+            author={data.author}
+            company={data.company}
+            projectLabel={data.projectHref ? 'Zobrazit projekt' : undefined}
+            projectHref={data.projectHref}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+  <ContactCtaBand
+    heading="Chcete podobnou spolupráci?"
+    summary="Pošlete základní parametry projektu. Záležitosti ceny, termínu i výstupů projdeme předem."
   />
 </BaseLayout>

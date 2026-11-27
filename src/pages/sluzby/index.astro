@@ -1,14 +1,47 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PlaceholderPage from '../../components/PlaceholderPage.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import ContactCtaBand from '../../components/ContactCtaBand.astro';
+import landscapeImg from '../../assets/placeholders/landscape-4x3.png';
+import fullBleedImg from '../../assets/placeholders/fullbleed-21x9.png';
+import heroImg from '../../assets/placeholders/hero-16x9.png';
 ---
 
 <BaseLayout
   title="Služby | Minka Creative"
-  description="[DOPLNIT: přehled služeb foto, video a dron]"
+  description="Fotografie, video a letecké záběry dronem pro firmy, stavebnictví, architekturu, akce a obce."
 >
-  <PlaceholderPage
-    heading="Služby — rozcestník"
-    routeNote="Trasa: /sluzby/ · Rozcestník služeb (Foto, Video, Dron a segmenty)."
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Co nabízím"
+        heading="Foto, video a dron"
+        lead="Komplexní záznam projektu od jednotlivých snímků až po dynamické video. Volba formátu nastavím podle účelu a cílové skupiny."
+        headingLevel="h1"
+        cmsEditable={true}
+      />
+      <div class="grid grid--3">
+        <ServiceCard title="Fotografické služby" summary="Reportáž, produktová a architektonická fotografie včetně upravených souborů pro web a sociální sítě." href="/sluzby/foto/" image={landscapeImg} imageAlt="[DOPLNIT: Reálná ukázka fotografické služby]" />
+        <ServiceCard title="Video produkce" summary="Krátká videa, firemní příběhy, reportáže a obsah pro sociální sítě od přípravy po finální záběry." href="/sluzby/video/" image={heroImg} imageAlt="[DOPLNIT: Reálná ukázka video produkce]" />
+        <ServiceCard title="Letecké záběry dronem" summary="Orientační pohledy na stavby, areály, obce a krajinu s důrazem na bezpečnost a schválení letu." href="/sluzby/dron/" image={fullBleedImg} imageAlt="[DOPLNIT: Reálný letecký záběr]" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <SectionHeader eyebrow="Pro konkrétní potřeby" heading="Řešení podle vašeho projektu" />
+      <div class="grid grid--2">
+        <ServiceCard title="Pro firmy a značky" summary="Promo fotografie, práce pro produkty i obsah pro sociální sítě." href="/pro-firmy/" image={landscapeImg} imageAlt="[DOPLNIT: Reálná ukázka práce pro firmu]" />
+        <ServiceCard title="Stavební fotoreporty" summary="Průběžná dokumentace stavby pro investory, developery a realizační firmy." href="/stavebni-fotoreporty/" image={fullBleedImg} imageAlt="[DOPLNIT: Reálný snímek z průběhu stavby]" />
+        <ServiceCard title="Interiéry a architektura" summary="Fotografická prezentace interiérů, exteriérů a architektonických projektů." href="/interiery-architektura/" image={heroImg} imageAlt="[DOPLNIT: Reálná ukázka interiéru]" />
+        <ServiceCard title="Obce, města a turismus" summary="Focení míst, akcí a destinací pro veřejnou i propagační komunikaci." href="/obce-mesta-turismus/" image={fullBleedImg} imageAlt="[DOPLNIT: Reálný pohled na město nebo obci]" />
+      </div>
+    </div>
+  </section>
+  <ContactCtaBand
+    heading="Nevíte přesně, jaký formát zvolit?"
+    summary="Popište účel materiálů a místo realizace. Pomohu navrhnout vhodnou kombinaci fotografií, videa nebo dronu."
   />
 </BaseLayout>

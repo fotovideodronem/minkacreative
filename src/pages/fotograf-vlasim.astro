@@ -1,14 +1,47 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PlaceholderPage from '../components/PlaceholderPage.astro';
+import ServiceTemplate from '../components/ServiceTemplate.astro';
+import landscapeImg from '../assets/placeholders/landscape-4x3.png';
+import fullBleedImg from '../assets/placeholders/fullbleed-21x9.png';
+import type { ServicePageData } from '../types/service';
+const data: ServicePageData = {
+  seoTitle: 'Fotograf Vlašim a okolí | Minka Creative',
+  seoDescription: 'Fotograf a tvůrce videí ve Vlašimi, Benešově a okolí Středočeského kraje.',
+  eyebrow: 'Lokální služba',
+  title: 'Fotograf a tvůrce videí Vlašim a okolí',
+  summaryLead: 'Fotografie i video pro firmy, developery, obce, akce a architektonické projekty ve Vlašimi, Benešově, na Praze a okolí. Lze domluvit reportážní natáčení, fotky interiérů, firemní obsah i letecké záběry.',
+  summaryBody: 'Základní oblast působení je Vlašim a Benešov se Středočeským krajem. Druhotně realizace nabízím ve Vysočině a Jižních Čechách. Cestovní podmínky a případné doplatky domlouvám předem podle vzdálenosti a rozsahu.',
+  heroImage: landscapeImg,
+  heroImageAlt: '[DOPLNIT: Reálná fotka z Vlašimi nebo okolí]',
+  specs: [
+    { label: 'Místa', value: 'Vlašim, Benešov, Středočeský kraj' },
+    { label: 'Druhotně', value: 'Praha, Vysočina, Jižní Čechy' },
+    { label: 'Služby', value: 'Foto, video, dron' },
+    { label: 'Cestovné', value: '[DOPLNIT: podmínky]', isPlaceholder: true },
+  ],
+  benefitsHeading: 'Pro zakázky z regionu',
+  benefits: [
+    { title: 'Dostupnost', description: 'Základní oblast je Vlašim, Benešov a okolí Středočeského kraje.' },
+    { title: 'Vizuální dokumentace', description: 'Focení i natáčení lze spojit do jednoho dne nebo dlouhodobého projektu.' },
+    { title: 'Praktické výstupy', description: 'Materiál přizpůsobím webu, sociálním sítím, tiskům i interním dokumentům.' },
+    { title: 'Přehledná příprava', description: 'Cestování, termín, přístup i podmínky projednáme před realizací.' },
+  ],
+  galleryHeading: 'Ukázky z regionu',
+  gallery: [
+    { image: fullBleedImg, alt: '[DOPLNIT: Reálný snímek z lokality]', caption: '[DOPLNIT: Popisek realizace]' },
+    { image: landscapeImg, alt: '[DOPLNIT: Reálný regionální projekt]', caption: '[DOPLNIT: Popisek realizace]' },
+  ],
+  processSteps: [
+    { title: 'Místo a cíl', description: 'Domluvíme lokaci, účel zakázky a požadované výstupy.' },
+    { title: 'Termín', description: 'Ověříme dostupnost místa, světlo, počasí i přístup.' },
+    { title: 'Realizace', description: 'Pořídíme fotografie i video podle sjednaného harmonogramu.' },
+    { title: 'Dodání', description: 'Upravený materiál předáme ve sjednaných formátech.' },
+  ],
+  projects: [],
+  faq: [
+    { question: 'Je Vlašim v základní oblasti působení?', answer: 'Ano. Vlašim, Benešov a okolí tvoří základní oblast pro realizace.' },
+    { question: 'Funguje cesta i do Prahy?', answer: 'Ano. Cena a čas realizace se domluví podle místa a rozsahu zakázky.' },
+    { question: 'Doprovodíte i zakázku mimo Středočeský kraj?', answer: 'Ano, druhotně realizace probíhají i na Vysočině a v Jižních Čechách.' },
+  ],
+};
 ---
-
-<BaseLayout
-  title="Fotograf Vlašim a okolí | Minka Creative"
-  description="[DOPLNIT: lokální služby Vlašim, Benešov, Středočeský kraj]"
->
-  <PlaceholderPage
-    heading="Fotograf Vlašim a okolí"
-    routeNote="Trasa: /fotograf-vlasim/ · Lokální stránka (Vlašim, Benešov, Středočeský kraj)."
-  />
-</BaseLayout>
+<ServiceTemplate data={data} galleryId="lokalni-vlasim" />

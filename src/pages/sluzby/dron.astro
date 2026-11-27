@@ -1,14 +1,48 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PlaceholderPage from '../../components/PlaceholderPage.astro';
----
+import ServiceTemplate from '../../components/ServiceTemplate.astro';
+import fullBleedImg from '../../assets/placeholders/fullbleed-21x9.png';
+import landscapeImg from '../../assets/placeholders/landscape-4x3.png';
+import type { ServicePageData } from '../../types/service';
 
-<BaseLayout
-  title="Letecké záběry dronem | Minka Creative"
-  description="[DOPLNIT: služby s dronem]"
->
-  <PlaceholderPage
-    heading="Letecké záběry dronem"
-    routeNote="Trasa: /sluzby/dron/ · Služba Dron."
-  />
-</BaseLayout>
+const data: ServicePageData = {
+  seoTitle: 'Letecké záběry dronem | Minka Creative',
+  seoDescription: 'Letecké fotografie a video ze staveb, areálů, obcí a krajiny.',
+  eyebrow: 'Dron',
+  title: 'Letecké záběry ze staveb, areálů a míst',
+  summaryLead: 'Dronem pořizujeme letecké fotografie i video dokumentující stavbu, areál, krajinu nebo akci. Výsledné materiály jsou vhodné pro prezentaci, archiv i průběžnou reportáž.',
+  summaryBody: 'Bezpečnost a povolení letu jsou součástí přípravy. Podle prostoru, větrných podmínek a účelu zvolíme vhodnou trasu a konečný pohled. Přímé lety nad lidmi ani mimo sjednané podmínky nepodstupujeme.',
+  heroImage: fullBleedImg,
+  heroImageAlt: '[DOPLNIT: Reálný letecký snímek stavby, areálu nebo krajiny]',
+  specs: [
+    { label: 'Výstupy', value: 'Foto a video' },
+    { label: 'Příprava', value: 'Kontrola prostoru a podmínek' },
+    { label: 'Dodání', value: '[DOPLNIT: termín dodání]', isPlaceholder: true },
+    { label: 'Oblast', value: 'Vlašim, Benešov, Praha a okolí' },
+  ],
+  benefitsHeading: 'Co letecké záběry přinášejí',
+  benefits: [
+    { title: 'Přehled o místě', description: 'Ukážou celý areál, polohu stavby, terén i okolí srozumitelněji než povrchové fotky.' },
+    { title: 'Dokumentace průběhu', description: 'Pravidelné snímky pomohou porovnat jednotlivé fáze realizace.' },
+    { title: 'Prezentace projektu', description: 'Materiály se hodí pro web, reportáže, prezentace i sociální sítě.' },
+    { title: 'Bezpečná příprava', description: 'Před letem ověřím prostor, povinnosti, počasí i další omezení provozu.' },
+  ],
+  galleryHeading: 'Ukázky letecké práce',
+  gallery: [
+    { image: landscapeImg, alt: '[DOPLNIT: Reálný letecký pohled]', caption: '[DOPLNIT: Popisek pohledu]' },
+    { image: fullBleedImg, alt: '[DOPLNIT: Reálný pohled na stavbu nebo areál]', caption: '[DOPLNIT: Popisek realizace]' },
+  ],
+  processSteps: [
+    { title: 'Domluva účelu', description: 'Upřesníme místo, požadované pohledy, výstupy a termín.' },
+    { title: 'Kontrola letu', description: 'Ověřím podmínky, omezení, přístup a bezpečný provoz dronu.' },
+    { title: 'Pořízení záběrů', description: 'Zachytíme celkové pohledy i pohyby a detaily podle přípravy.' },
+    { title: 'Editace a export', description: 'Materiál upravím a dodám ve sjednaném rozlišení či formátu.' },
+  ],
+  projects: [],
+  faq: [
+    { question: 'Lze létat nad každým areálem?', answer: 'Ne. Před letem ověřujeme omezení, povolení, pozemek a aktuální podmínky.' },
+    { question: 'Co ovlivňuje termín realizace?', answer: 'Nejvíce počasí, omezení vzdušného prostoru a nutnost přípravných souhlasů.' },
+    { question: 'Dodáváte i video ze záběrů dronu?', answer: 'Ano. Rozsah střihu i použité pohledy lze domluvit podle účelu.' },
+  ],
+};
+---
+<ServiceTemplate data={data} galleryId="service-dron" />

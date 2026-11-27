@@ -1,14 +1,52 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PlaceholderPage from '../components/PlaceholderPage.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import ContactCtaBand from '../components/ContactCtaBand.astro';
+import { getCollection } from 'astro:content';
+
+const faqItems = (await getCollection('faqs'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map(({ data }) => ({ question: data.question, answer: data.answer }));
+
+const faqStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems
+    .filter((item) => !item.answer.startsWith('[DOPLNIT'))
+    .map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+};
 ---
 
 <BaseLayout
   title="Časté dotazy (FAQ) | Minka Creative"
-  description="[DOPLNIT: časté dotazy]"
+  description="Odpovědi na otázky k fotografování, natáčení, dronu, termínu, dodání a cenám."
 >
-  <PlaceholderPage
-    heading="Časté dotazy (FAQ)"
-    routeNote="Trasa: /faq/ · Odpovědi na nejčastější otázky."
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(faqStructuredData)} />
+  <section class="section">
+    <div class="container faq-page">
+      <SectionHeader
+        eyebrow="FAQ"
+        heading="Časté dotazy"
+        lead="Základní informace před poptávkou. Konkrétní podmínky se vždy domlouvají podle projektu."
+        headingLevel="h1"
+        cmsEditable={true}
+      />
+      <FaqAccordion
+        openFirst={true}
+        items={faqItems}
+      />
+    </div>
+  </section>
+  <ContactCtaBand
+    heading="Neodpověděla vám otázka?"
+    summary="Napište mi, co chcete realizovat. Doplním specifika a navrhnu vhodný postup."
   />
 </BaseLayout>

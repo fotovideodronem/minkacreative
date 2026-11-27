@@ -1,5 +1,4 @@
 ---
-import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroSection from '../components/HeroSection.astro';
 import SectionHeader from '../components/SectionHeader.astro';
@@ -10,9 +9,11 @@ import VideoBlock from '../components/VideoBlock.astro';
 import MasonryGallery from '../components/MasonryGallery.astro';
 import Lightbox from '../components/Lightbox.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
-import ClientLogoStrip from '../components/ClientLogoStrip.astro';
+import ClientLogoMarquee from '../components/ClientLogoMarquee.astro';
 import ContactCtaBand from '../components/ContactCtaBand.astro';
 import { siteConfig } from '../config/site';
+import { getCollection } from 'astro:content';
+import { getPageCopy } from '../utils/pageCopy';
 
 import heroPoster from '../assets/placeholders/hero-16x9.png';
 import fullBleedImg from '../assets/placeholders/fullbleed-21x9.png';
@@ -20,12 +21,6 @@ import landscapeImg from '../assets/placeholders/landscape-4x3.png';
 import portraitImg from '../assets/placeholders/portrait-3x4.png';
 import tallImg from '../assets/placeholders/tall-4x5.png';
 import squareImg from '../assets/placeholders/square-1x1.png';
-
-const preloadedHero = await getImage({
-  src: heroPoster,
-  width: 1440,
-  format: 'webp',
-});
 
 const coreServices = [
   {
@@ -62,7 +57,7 @@ const segmentLinks = siteConfig.navigation.servicesGroups[1]?.items ?? [];
 const featuredProjects = [
   {
     title: '[DOPLNIT: Vybraný projekt 1]',
-    href: '/portfolio/ukazka-projektu/',
+    href: '/portfolio/ukazka-stavba/',
     summary: '[DOPLNIT: Krátké shrnutí zakázky na 1 až 2 věty (zadání a výsledek).]',
     image: landscapeImg,
     imageAlt: '[DOPLNIT: Zástupný snímek vybraného projektu 1]',
@@ -75,7 +70,7 @@ const featuredProjects = [
   },
   {
     title: '[DOPLNIT: Vybraný projekt 2]',
-    href: '/portfolio/ukazka-projektu/',
+    href: '/portfolio/ukazka-firemni-video/',
     summary: '[DOPLNIT: Krátké shrnutí zakázky — např. stavební postup nebo firemní promo.]',
     image: heroPoster,
     imageAlt: '[DOPLNIT: Zástupný snímek vybraného projektu 2]',
@@ -140,25 +135,26 @@ const trustFacts = [
   },
 ];
 
-const placeholderLogos = [
-  { name: '[DOPLNIT: Schválené logo klienta 1]', isPlaceholder: true },
-  { name: '[DOPLNIT: Schválené logo klienta 2]', isPlaceholder: true },
-  { name: '[DOPLNIT: Schválené logo klienta 3]', isPlaceholder: true },
-  { name: '[DOPLNIT: Schválené logo klienta 4]', isPlaceholder: true },
-];
+const clientLogos = siteConfig.clientLogos;
+const homeCopy = await getPageCopy('home');
+const homeSummaryFallback = `[DOPLNIT: Souhrn na 50 až 80 slov, který přímo odpovídá na otázky: kdo
+  (Jakub Minka / Minka Creative), co (foto, video, dron), pro koho (firmy,
+  stavební firmy a developeři, realitky a architekti, obce, akce a maturitní
+  plesy), kde (Vlašim, Benešov, Středočeský kraj, Praha) a orientační cena od.]`;
+const testimonials = (await getCollection('testimonials'))
+  .filter(({ data }) => data.published)
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <BaseLayout
   title="Minka Creative | Fotograf a tvůrce videí — Vlašim, Benešov, Praha"
   description="[DOPLNIT: Popis titulní stránky — foto, video a dron pro firmy, stavby, reality, obce a akce.]"
 >
-  <link slot="head" rel="preload" as="image" href={preloadedHero.src} />
-
   <!-- 1. Hero s videem / posterem přes celou šířku -->
   <HeroSection
-    eyebrow="Minka Creative · Foto · Video · Dron"
-    heading="[DOPLNIT: Hlavní nadpis titulky — krátký a srozumitelný]"
-    lead="[DOPLNIT: Jedna stručná věta, co děláš, pro koho a kde působíš.]"
+    eyebrow={homeCopy?.data.eyebrow || 'Minka Creative · Foto · Video · Dron'}
+    heading={homeCopy?.data.heading || '[DOPLNIT: Hlavní nadpis titulky — krátký a srozumitelný]'}
+    lead={homeCopy?.data.lead || '[DOPLNIT: Jedna stručná věta, co děláš, pro koho a kde působíš.]'}
     poster={heroPoster}
     posterAlt="[DOPLNIT: Popis hlavního náhledového snímku titulky]"
     primaryCta={{ label: 'Nezávazná poptávka', href: '/kontakt/' }}
@@ -170,14 +166,10 @@ const placeholderLogos = [
     <div class="container home-intro">
       <div class="home-intro__summary">
         <span class="eyebrow">Přehled</span>
-        <h2>[DOPLNIT: Nadpis souhrnu — kdo jsem a komu pomáhám]</h2>
+        <h2>{homeCopy?.data.summary || '[DOPLNIT: Nadpis souhrnu — kdo jsem a komu pomáhám]'}</h2>
         <div class="home-placeholder-box">
           <p>
-            [DOPLNIT: Souhrn na 50 až 80 slov, který přímo odpovídá na otázky: kdo
-            (Jakub Minka / Minka Creative), co (foto, video, dron), pro koho (firmy,
-            stavební firmy a developeři, realitky a architekti, obce, akce a maturitní
-            plesy), kde (Vlašim, Benešov, Středočeský kraj, Praha) a orientační cena
-            od.]
+            {homeCopy?.data.summaryText || homeSummaryFallback}
           </p>
         </div>
       </div>
@@ -329,23 +321,18 @@ const placeholderLogos = [
       />
 
       <div class="grid grid--2">
-        <TestimonialCard
-          quote="[DOPLNIT: Zástupný text reference 1 — bude nahrazen skutečnou citací klienta.]"
-          author="[DOPLNIT: Jméno a příjmení]"
-          company="[DOPLNIT: Firma / obec / škola]"
-          projectLabel="Zobrazit projekt"
-          projectHref="/portfolio/ukazka-projektu/"
-        />
-        <TestimonialCard
-          quote="[DOPLNIT: Zástupný text reference 2 — bude nahrazen skutečnou citací klienta.]"
-          author="[DOPLNIT: Jméno a příjmení]"
-          company="[DOPLNIT: Firma / obec / škola]"
-        />
+        {testimonials.slice(0, 2).map(({ data }) => (
+          <TestimonialCard
+            quote={data.quote}
+            author={data.author}
+            company={data.company}
+          />
+        ))}
       </div>
-
-      <ClientLogoStrip logos={placeholderLogos} />
     </div>
   </section>
+
+  <ClientLogoMarquee logos={clientLogos} />
 
   <!-- 9. Závěrečný blok Kontakt a Poptávka -->
   <ContactCtaBand />

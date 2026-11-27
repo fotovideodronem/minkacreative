@@ -1,14 +1,49 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PlaceholderPage from '../../components/PlaceholderPage.astro';
----
+import ServiceTemplate from '../../components/ServiceTemplate.astro';
+import heroImg from '../../assets/placeholders/hero-16x9.png';
+import fullBleedImg from '../../assets/placeholders/fullbleed-21x9.png';
+import landscapeImg from '../../assets/placeholders/landscape-4x3.png';
+import type { ServicePageData } from '../../types/service';
 
-<BaseLayout
-  title="Video produkce | Minka Creative"
-  description="[DOPLNIT: video služby]"
->
-  <PlaceholderPage
-    heading="Video produkce"
-    routeNote="Trasa: /sluzby/video/ · Služba Video."
-  />
-</BaseLayout>
+const data: ServicePageData = {
+  seoTitle: 'Video produkce | Minka Creative',
+  seoDescription: 'Firemní, reportážní a promo video pro web, prezentace i sociální sítě.',
+  eyebrow: 'Video produkce',
+  title: 'Firemní a produktové video',
+  summaryLead: 'Natáčím videa, která ukazují práci firmy, stavbu, akci nebo konkrétní produkt. Výstup přizpůsobím účelu: web, prezentace, reklama nebo sociální síť.',
+  summaryBody: 'Společně stanovíme příběh, rytmus, důležité záběry a požadovanou délku. Od krátkých vertikálních klipů po delší prezentace řeším natáčení i základní postprodukci.',
+  heroImage: heroImg,
+  heroImageAlt: '[DOPLNIT: Reálný snímek z firemního nebo reportážního natáčení]',
+  specs: [
+    { label: 'Formáty', value: 'Horizontální i vertikální' },
+    { label: 'Délka', value: '[DOPLNIT: typická délka zpracování]', isPlaceholder: true },
+    { label: 'Dodání', value: '[DOPLNIT: termín dodání]', isPlaceholder: true },
+    { label: 'Oblast', value: 'Vlašim, Benešov, Praha a okolí' },
+  ],
+  benefitsHeading: 'Co video nabízí',
+  benefits: [
+    { title: 'Příprava příběhu', description: 'Dohodneme hlavní sdělení, scénář nebo strukturu natáčení ještě před termínem.' },
+    { title: 'Vhodné záběry', description: 'Spojíme celkové pohledy, detaily, lidi a běžný průběh práce.' },
+    { title: 'Verze pro kanály', description: 'Materiál lze upravit pro web, YouTube nebo krátké videa na sociálních sítích.' },
+    { title: 'Jednotný vzhled', description: 'Barevnost, hudba, titulky a dynamika ladíme podle značky a cílové skupiny.' },
+  ],
+  galleryHeading: 'Ukázky videa',
+  gallery: [
+    { image: fullBleedImg, alt: '[DOPLNIT: Reálný snímek z video produkce]', caption: '[DOPLNIT: Popisek realizace]' },
+    { image: landscapeImg, alt: '[DOPLNIT: Reálný snímek z reportáže]', caption: '[DOPLNIT: Popisek realizace]' },
+  ],
+  processSteps: [
+    { title: 'Cíl a obsah', description: 'Určíme sdělení, cílovou skupinu, délku a místa použití videa.' },
+    { title: 'Scénář a termín', description: 'Vytvoříme jednoduchý plán záběrů, obsazení, přípravy a harmonogramu.' },
+    { title: 'Natáčení', description: 'Na místě zachytíme pohledy potřebné pro stručný a zřetelný příběh.' },
+    { title: 'Střih a dodání', description: 'Video upravíme, prodiskutujeme korektury a dodáme ve sjednaných rozměrech.' },
+  ],
+  projects: [],
+  faq: [
+    { question: 'Je možné natočit jedno video pro několik sociálních sítí?', answer: 'Ano, po domluvě lze připravit horizontální i vertikální nebo čtvercové exporty.' },
+    { question: 'Potřebuji hotový scénář?', answer: 'Ne. Společně zvolíme jednoduchou osnovu nebo otázky pro rozhovor.' },
+    { question: 'Kolik korektur je součástí?', answer: '[DOPLNIT: Počet korekturních kol a rozsah střihu stanovíme před smlouvou.]' },
+  ],
+};
+---
+<ServiceTemplate data={data} galleryId="service-video" />

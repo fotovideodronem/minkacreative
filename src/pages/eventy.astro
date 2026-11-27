@@ -1,14 +1,47 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PlaceholderPage from '../components/PlaceholderPage.astro';
+import ServiceTemplate from '../components/ServiceTemplate.astro';
+import landscapeImg from '../assets/placeholders/landscape-4x3.png';
+import portraitImg from '../assets/placeholders/portrait-3x4.png';
+import type { ServicePageData } from '../types/service';
+const data: ServicePageData = {
+  seoTitle: 'Focení a natáčení eventů a akcí | Minka Creative',
+  seoDescription: 'Reportážní fotografie a video firemních, kulturních a sportovní akcí.',
+  eyebrow: 'Eventy a akce',
+  title: 'Foto a video z firemních, kulturních a sportovních akcí',
+  summaryLead: 'Zachycují firemní večírky, konferenci, kulturní akce i sportovní akce. Výstupem jsou reportážní fotky a případně krátké či delší video použitelné pro interní i veřejnou komunikaci.',
+  summaryBody: 'Před akcí stanovíme hlavní momenty, důležité osoby, časový harmonogram i požadované formáty. Přístupy k místu i souhlas účastníků ověřujeme předem, takže focení nezasahuje do programu.',
+  heroImage: landscapeImg,
+  heroImageAlt: '[DOPLNIT: Reálný snímek z firemní nebo kulturní akce]',
+  specs: [
+    { label: 'Typ akce', value: 'Firemní, kulturní, sportovní' },
+    { label: 'Výstupy', value: 'Foto, video, reelsky' },
+    { label: 'Dodání', value: '[DOPLNIT: termín dodání]', isPlaceholder: true },
+    { label: 'Oblast', value: 'Vlašim, Benešov, Praha a okolí' },
+  ],
+  benefitsHeading: 'Co z akce získáte',
+  benefits: [
+    { title: 'Atmosféra akce', description: 'Zachytím interakce, prostor a dynamiku celého programu.' },
+    { title: 'Klíčové momenty', description: 'Dohodneme řečnické vstupy, předání cen, prezentace i další důležité body.' },
+    { title: 'Materiál pro tisk', description: 'Výstupy lze použít v zprávách, novinkách a reportech.' },
+    { title: 'Rychlé ukázky', description: 'Podle domluvy připravíme výběr snímků nebo krátké záběry pro sociální sítě.' },
+  ],
+  galleryHeading: 'Ukázky z akcí',
+  gallery: [
+    { image: portraitImg, alt: '[DOPLNIT: Reálný snímek účastníka akce]', caption: '[DOPLNIT: Popisek momentu]' },
+    { image: landscapeImg, alt: '[DOPLNIT: Reálný snímek průběhu akce]', caption: '[DOPLNIT: Popisek momentu]' },
+  ],
+  processSteps: [
+    { title: 'Program a cíle', description: 'Upřesníme délku akce, důležité momenty a účel výstupů.' },
+    { title: 'Povolení a souhlasy', description: 'Dohodneme postup s pořadatelem a informace o zveřejnění.' },
+    { title: 'Reportáž', description: 'Pracuji nenápadně a současně sleduji předem domluvené momenty.' },
+    { title: 'Export', description: 'Fotky i video upravíme, zpracujeme a předáme ve sjednaném termínu.' },
+  ],
+  projects: [],
+  faq: [
+    { question: 'Jak dlouho se fotí akce?', answer: 'Rozsah se nastavuje podle programu. Cenu i délku sjednáme předem.' },
+    { question: 'Můžete dodat snímky ještě během akce?', answer: '[DOPLNIT: Express dodání je možné pouze po předchozí domluvě rozsahu a techniky.]' },
+    { question: 'Musíme získat souhlasy účastníků?', answer: 'Ano. Veřejné využití snímků osob a autorské limity je nutné ověřit s pořadatelem.' },
+  ],
+};
 ---
-
-<BaseLayout
-  title="Eventy a akce | Minka Creative"
-  description="[DOPLNIT: firemní, kulturní a sportovní akce]"
->
-  <PlaceholderPage
-    heading="Eventy"
-    routeNote="Trasa: /eventy/ · Firemní, kulturní a sportovní akce."
-  />
-</BaseLayout>
+<ServiceTemplate data={data} galleryId="segment-eventy" />

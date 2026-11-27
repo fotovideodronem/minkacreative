@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+---
+
+<BaseLayout
+  title="Stránka nenalezena | Minka Creative"
+  description="Požadovaná stránka neexistuje nebo byla přesunuta."
+  noindex={true}
+>
+  <section class="section">
+    <div class="container not-found">
+      <span class="eyebrow">Chyba 404</span>
+      <h1>Stránka nebyla nalezena</h1>
+      <p class="lead">
+        Odkaz může být zastaralý nebo stránka mohla změnit adresu.
+        Přejděte na úvod nebo si prohlédněte portfolio.
+      </p>
+      <div class="not-found__actions">
+        <Button href="/" variant="primary">Zpět na úvod</Button>
+        <Button href="/portfolio/" variant="secondary">Prohlédnout portfolio</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 60vh;
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: var(--space-5);
+  }
+  .not-found h1 { margin: 0; }
+  .not-found__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+</style>

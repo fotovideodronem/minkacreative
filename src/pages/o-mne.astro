@@ -1,14 +1,77 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PlaceholderPage from '../components/PlaceholderPage.astro';
+import { Picture } from 'astro:assets';
+import SectionHeader from '../components/SectionHeader.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import ContactCtaBand from '../components/ContactCtaBand.astro';
+import portraitImg from '../assets/placeholders/portrait-3x4.png';
 ---
 
 <BaseLayout
   title="O mně | Jakub Minka | Minka Creative"
-  description="[DOPLNIT: o Jakubovi Minkovi]"
+  description="Jakub Minka — fotograf a tvůrce videí působící ve Vlašimi, Benešově, Praze a okolí."
 >
-  <PlaceholderPage
-    heading="O mně — Jakub Minka"
-    routeNote="Trasa: /o-mne/ · Představení, technika a zkušenosti."
+  <section class="section">
+    <div class="container about-grid">
+      <div class="about-copy">
+        <span class="eyebrow">O mně</span>
+        <h1>Jakub Minka</h1>
+        <p class="lead">
+          Jsem fotograf a tvůrce videí se zaměřením na firmy, stavebnictví,
+          architekturu, obce a akce. Snímky i video tvořím tak, aby se daly
+          prakticky použít na webu, v tisku i na sociálních sítích.
+        </p>
+        <p>
+          Pracuji u zákazníka i na místě realizace ve Vlašimi, Benešově,
+          Praze a okolí. Před každou zakázkou upřesním účel výstupů,
+          důležité detaily, harmonogram a způsob dodání.
+        </p>
+        <p>
+          [DOPLNIT: Krátké reálné zkušenosti, vzdělání, vybavení nebo
+          významné milníky — pouze údaje, které lze doložit.]
+        </p>
+      </div>
+      <Picture
+        src={portraitImg}
+        alt="[DOPLNIT: Reálný portrét Jakuba Minky]"
+        formats={['avif', 'webp']}
+        widths={[480, 768]}
+        sizes="(min-width: 64rem) 38vw, 94vw"
+        loading="eager"
+        class="about-photo"
+      />
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Práce"
+        heading="Jak spolupráce probíhá"
+        lead="Dohoda je jednoduchá a většina rozhodnutí padne ještě před natáčením."
+      />
+      <ProcessSteps
+        steps={[
+          { title: 'Účel a rozsah', description: 'Upřesníme, kde budou výstupy použité a co musí zachytit.' },
+          { title: 'Příprava', description: 'Dohodneme místo, čas, přístup, osoby i případné povolení.' },
+          { title: 'Realizace', description: 'Na místě pracuji systematicky podle předem sjednaného plánu.' },
+          { title: 'Dodání', description: 'Výstupy upravím a předám ve sjednaném formátu a termínu.' },
+        ]}
+      />
+    </div>
+  </section>
+  <ContactCtaBand
+    heading="Máte projekt nebo konkrétní termín?"
+    summary="Pošlete základní informace o místě, účelu materiálů a předpokládaném termínu. Ozvu se s dalšími dotazy."
   />
 </BaseLayout>
+
+<style>
+  .about-grid { display: grid; gap: var(--space-8); align-items: center; }
+  .about-copy { display: grid; gap: var(--space-5); max-width: 42rem; }
+  .about-copy h1 { margin: 0; }
+  .about-photo { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius-lg); }
+  @media (min-width: 64rem) {
+    .about-grid { grid-template-columns: 1.25fr .75fr; }
+  }
+</style>
